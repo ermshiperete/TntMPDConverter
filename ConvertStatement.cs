@@ -31,10 +31,14 @@ namespace TntMPDConverter
 
         private static string ProcessDonations(ref State state)
         {
-        	int projectNo = 0;
-			if (state is Project)
-				projectNo = ((Project)state).ProjectNo;
-            var builder = new StringBuilder();
+        	var projectNo = 0;
+        	var project = state as Project;
+			if (project != null)
+			{
+				state = state.NextState();
+				projectNo = project.ProjectNo;
+			}
+        	var builder = new StringBuilder();
             builder.AppendLine("[GIFTS]");
             builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\"");
             var info1 = new CultureInfo("en-US", false);

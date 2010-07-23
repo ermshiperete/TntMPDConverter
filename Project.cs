@@ -29,7 +29,7 @@ namespace TntMPDConverter
 
 		public static bool IsProject(string line)
 		{
-			var regex = new Regex("Projekt\t[0-9]+  [^\t]+\tSoll €\tHaben €");
+			var regex = new Regex("Projekt\t[0-9]+  [^\t]+");
 			return regex.IsMatch(line);
 		}
 

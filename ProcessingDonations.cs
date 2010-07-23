@@ -15,19 +15,23 @@ namespace TntMPDConverter
 			public string Donor;
 		}
 
-		protected Dictionary<int, Dictionary<string, NewDonor>> ReplacementInfo { get; set; }
+		protected static Dictionary<int, Dictionary<string, NewDonor>> ReplacementInfo { get; set; }
+
+		static ProcessingDonations()
+		{
+			var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase
+				.Substring(Environment.OSVersion.Platform == PlatformID.Unix ? 7 : 8));
+			ReplacementFileName = Path.GetFullPath(Path.Combine(dir, "replace.config"));
+			UpdateReplacementInfo();
+		}
 
 		public ProcessingDonations(Scanner reader) : base(reader)
         {
-        	var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase
-				.Substring(Environment.OSVersion.Platform == PlatformID.Unix ? 7 : 8));
-        	ReplacementFileName = Path.GetFullPath(Path.Combine(dir, "replacement.config"));
-			UpdateReplacementInfo();
         }
 
-		protected string ReplacementFileName { get; set; }
+		protected static string ReplacementFileName { get; set; }
 
-		protected void UpdateReplacementInfo()
+		protected static void UpdateReplacementInfo()
 		{
 			ReplacementInfo = new Dictionary<int, Dictionary<string, NewDonor>>();
 			ReadReplacementFile();
@@ -44,17 +48,17 @@ namespace TntMPDConverter
         {
             get
             {
-                var info1 = new CultureInfo("de-DE");
+                var info = new CultureInfo("de-DE");
                 Donation donation = null;
                 string line = Reader.ReadLine();
                 while (true)
                 {
                     if (line.Trim() != "")
                     {
-                        string[] textArray1 = line.Split(new[] { '\t' });
-                        if (textArray1.Length != 7)
+                        string[] strings = line.Split(new[] { '\t' });
+                        if (strings.Length != 7)
                         {
-                            if (!textArray1[0].StartsWith("Projekt"))
+                            if (!strings[0].StartsWith("Projekt"))
                             {
                                 Reader.UnreadLine(line);
                                 IsValid = false;
@@ -65,18 +69,18 @@ namespace TntMPDConverter
                         {
                             donation = new Donation
                                         	{
-                                        		DonorNo = Convert.ToInt32(textArray1[1]),
-                                        		Date = Convert.ToDateTime(textArray1[2], info1),
-                                        		Amount = Convert.ToDecimal(textArray1[3], info1)
+                                        		DonorNo = Convert.ToInt32(strings[1]),
+                                        		Date = Convert.ToDateTime(strings[2], info),
+                                        		Amount = Convert.ToDecimal(strings[3], info)
                                         	};
-                        	if (textArray1[4] == "S")
+                        	if (strings[4] == "S")
                             {
                                 donation.Amount = -donation.Amount;
                             }
                             var settings = Settings.Default;
                             settings.BookingId++;
                             donation.BookingId = Settings.Default.BookingId.ToString();
-                            donation.Donor = textArray1[6];
+                            donation.Donor = strings[6];
 							if (ReplacementInfo.ContainsKey(donation.DonorNo))
 							{
 								foreach (var key in ReplacementInfo[donation.DonorNo].Keys)
@@ -98,7 +102,7 @@ namespace TntMPDConverter
             }
         }
 
-		protected void ReadReplacementFile()
+		protected static void ReadReplacementFile()
 		{
 			if (!File.Exists(ReplacementFileName))
 				return;

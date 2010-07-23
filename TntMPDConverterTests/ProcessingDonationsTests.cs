@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using NUnit.Framework;
 using TntMPDConverter;
 
@@ -22,19 +20,24 @@ namespace TntMPDConverterTests
 			public MyProcessingDonations(Scanner reader)
 				: base(reader)
 			{
+				OriginalReplacementFileName = ReplacementFileName;
 			}
 
-			internal Dictionary<int, Dictionary<string, NewDonor>> GetReplacementInfo()
+			private static string OriginalReplacementFileName { get; set; }
+
+			internal static Dictionary<int, Dictionary<string, NewDonor>> GetReplacementInfo()
 			{
 				return ReplacementInfo;
 			}
 			
-			internal string GetReplacementFileName()
+			internal static string GetReplacementFileName()
 			{
-				return ReplacementFileName;
+				if (OriginalReplacementFileName == null)
+					return ReplacementFileName;
+				return OriginalReplacementFileName;
 			}
 
-			internal void SetReplacementFileName(string fileName)
+			internal static void SetReplacementFileName(string fileName)
 			{
 				ReplacementFileName = fileName;
 				UpdateReplacementInfo();
@@ -71,19 +74,24 @@ namespace TntMPDConverterTests
 			File.Delete(ReplacementFileName);
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			MyProcessingDonations.SetReplacementFileName(MyProcessingDonations.GetReplacementFileName());
+		}
+
 		[Test]
 		public void ReplacementFile()
 		{
-			Assert.AreEqual(Path.Combine(Environment.CurrentDirectory, "replacement.config"),
-				new MyProcessingDonations(null).GetReplacementFileName());
+			Assert.AreEqual(Path.Combine(Environment.CurrentDirectory, "replace.config"),
+				MyProcessingDonations.GetReplacementFileName());
 		}
 
 		[Test]
 		public void ReplacementInfo()
 		{
-			var processingDonations = new MyProcessingDonations(null);
-			processingDonations.SetReplacementFileName(ReplacementFileName);
-			var info = processingDonations.GetReplacementInfo();
+			MyProcessingDonations.SetReplacementFileName(ReplacementFileName);
+			var info = MyProcessingDonations.GetReplacementInfo();
 			Assert.AreEqual(1, info.Count);
 			Assert.IsTrue(info.ContainsKey(999));
 			var value = info[999];
@@ -115,7 +123,7 @@ namespace TntMPDConverterTests
 			var reader = new Scanner(null);
 			reader.UnreadLine("\t999\t01.06.2010\t80,00\tH\tKD\tungen. ueberw. durch Markus Mustermann");
 			var processingDonations = new MyProcessingDonations(reader);
-			processingDonations.SetReplacementFileName(ReplacementFileName);
+			MyProcessingDonations.SetReplacementFileName(ReplacementFileName);
 			var donation = processingDonations.NextDonation;
 			AssertDonationEqual(new Donation(80, new DateTime(2010, 06, 01), "Mustermann, Markus", 997),
 				donation);
