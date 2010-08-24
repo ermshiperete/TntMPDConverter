@@ -158,6 +158,7 @@ namespace TntMPDConverter
 			// openFileDialog
 			// 
 			this.openFileDialog.FileName = "Projektabrechnung.txt";
+			this.openFileDialog.Filter = "RTF Dateien|*.rtf|Alle Dateien|*.*";
 			this.openFileDialog.Title = "Projektabrechnung auswählen";
 			// 
 			// Form1

@@ -40,7 +40,7 @@ namespace TntMPDConverter
             return null;
         }
 
-        public static State Initialize(StreamReader reader)
+        public static State Initialize(TextReader reader)
         {
             return new Initial(new Scanner(reader));
         }

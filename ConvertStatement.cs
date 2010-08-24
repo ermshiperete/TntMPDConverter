@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using TntMPDConverter.Properties;
 
 namespace TntMPDConverter
@@ -11,8 +12,7 @@ namespace TntMPDConverter
         public void DoConversion()
         {
             string donations;
-        	string encodingName = Environment.OSVersion.Platform == PlatformID.Unix ? "UTF-8" : "Windows-1252";
-            using (var reader = new StreamReader(Settings.Default.SourceFile, Encoding.GetEncoding(encodingName)))
+			using (var reader = new StringReader(ConvertToText(Settings.Default.SourceFile)))
             {
                 var state = State.Initialize(reader).NextState();
                 donations = ProcessDonations(ref state);
@@ -28,6 +28,24 @@ namespace TntMPDConverter
                 writer.Write(donations);
             }
         }
+
+    	private static Encoding CurrentEncoding
+    	{
+    		get
+    		{
+				string encodingName = Environment.OSVersion.Platform == PlatformID.Unix ? "UTF-8" : "Windows-1252";
+    			return Encoding.GetEncoding(encodingName);
+			}
+    	}
+
+		private static string ConvertToText(string rtfFileName)
+		{
+			using (var rtBox = new RichTextBox())
+			{
+				rtBox.Rtf = File.ReadAllText(rtfFileName, CurrentEncoding);
+				return rtBox.Text;
+			}
+		}
 
         private static string ProcessDonations(ref State state)
         {

@@ -6,9 +6,9 @@ namespace TntMPDConverter
     public class Scanner
     {
         protected string m_line;
-        private readonly StreamReader m_reader;
+        private readonly TextReader m_reader;
 
-		public Scanner(StreamReader reader)
+		public Scanner(TextReader reader)
         {
             m_reader = reader;
         }
@@ -33,7 +33,9 @@ namespace TntMPDConverter
         {
             get
             {
-                return m_reader.EndOfStream;
+				if (m_reader is StreamReader)
+					return ((StreamReader)m_reader).EndOfStream;
+				return m_reader.Peek() == -1;
             }
         }
     }
