@@ -13,7 +13,8 @@ Einfach in ein beliebiges Verzeichnis entpacken.
 
 Benutzung
 ---------
-Die Projektabrechnung muss zunächst als Text-Datei abgespeichert werden (Erweiterung .txt).
+Die Projektabrechnung muss zunächst in Word geöffnet werden und als Plain-Text-Datei abgespeichert 
+werden (Erweiterung .txt).
 Dann kann TntMPDConvert aufgerufen werden und die gespeicherte Datei im Feld "Projektabrechnung"
 ausgewählt werden. 
 Außerdem kann ein Zielverzeichnis ausgewählt werden, in dem die konvertierte Datei gespeichert

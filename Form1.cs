@@ -41,8 +41,11 @@ namespace TntMPDConverter
 
         private void OnTargetClick(object sender, EventArgs e)
         {
-        	folderBrowserDialog.SelectedPath = edtTargetPath.Text.Length > 0 ? 
-				edtTargetPath.Text : Path.GetDirectoryName(edtSourceFile.Text);
+        	folderBrowserDialog.SelectedPath = 
+				edtTargetPath.Text.Length > 0 && edtSourceFile.Text.Length > 0 ? 
+				Path.GetDirectoryName(edtSourceFile.Text) : 
+				edtTargetPath.Text.Length > 0 ? edtTargetPath.Text : 
+				Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         	if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
@@ -67,117 +70,113 @@ namespace TntMPDConverter
 
         private void InitializeComponent()
         {
-			label1 = new Label();
-			edtSourceFile = new TextBox();
-			btnSource = new Button();
-			label2 = new Label();
-			edtTargetPath = new TextBox();
-			btnTarget = new Button();
-			btnOk = new Button();
-			btnCancel = new Button();
-			openFileDialog = new OpenFileDialog();
-			folderBrowserDialog = new FolderBrowserDialog();
-			SuspendLayout();
+			this.label1 = new System.Windows.Forms.Label();
+			this.edtSourceFile = new System.Windows.Forms.TextBox();
+			this.btnSource = new System.Windows.Forms.Button();
+			this.label2 = new System.Windows.Forms.Label();
+			this.edtTargetPath = new System.Windows.Forms.TextBox();
+			this.btnTarget = new System.Windows.Forms.Button();
+			this.btnOk = new System.Windows.Forms.Button();
+			this.btnCancel = new System.Windows.Forms.Button();
+			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.SuspendLayout();
 			// 
 			// label1
 			// 
-			label1.AutoSize = true;
-			label1.Location = new System.Drawing.Point(13, 13);
-			label1.Name = "label1";
-			label1.Size = new System.Drawing.Size(97, 13);
-			label1.TabIndex = 0;
-			label1.Text = "Projektabrechnung";
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(13, 13);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(97, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "Projektabrechnung";
 			// 
 			// edtSourceFile
 			// 
-			edtSourceFile.Location = new System.Drawing.Point(16, 30);
-			edtSourceFile.Name = "edtSourceFile";
-			edtSourceFile.Size = new System.Drawing.Size(230, 20);
-			edtSourceFile.TabIndex = 1;
+			this.edtSourceFile.Location = new System.Drawing.Point(16, 30);
+			this.edtSourceFile.Name = "edtSourceFile";
+			this.edtSourceFile.Size = new System.Drawing.Size(230, 20);
+			this.edtSourceFile.TabIndex = 1;
 			// 
 			// btnSource
 			// 
-			btnSource.Location = new System.Drawing.Point(252, 27);
-			btnSource.Name = "btnSource";
-			btnSource.Size = new System.Drawing.Size(28, 23);
-			btnSource.TabIndex = 2;
-			btnSource.Text = "...";
-			btnSource.UseVisualStyleBackColor = true;
-			btnSource.Click += OnSourceClick;
+			this.btnSource.Location = new System.Drawing.Point(252, 27);
+			this.btnSource.Name = "btnSource";
+			this.btnSource.Size = new System.Drawing.Size(28, 23);
+			this.btnSource.TabIndex = 2;
+			this.btnSource.Text = "...";
+			this.btnSource.UseVisualStyleBackColor = true;
+			this.btnSource.Click += new System.EventHandler(this.OnSourceClick);
 			// 
 			// label2
 			// 
-			label2.AutoSize = true;
-			label2.Location = new System.Drawing.Point(13, 57);
-			label2.Name = "label2";
-			label2.Size = new System.Drawing.Size(77, 13);
-			label2.TabIndex = 3;
-			label2.Text = "Zielverzeichnis";
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(13, 57);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(77, 13);
+			this.label2.TabIndex = 3;
+			this.label2.Text = "Zielverzeichnis";
 			// 
 			// edtTargetPath
 			// 
-			edtTargetPath.Location = new System.Drawing.Point(16, 74);
-			edtTargetPath.Name = "edtTargetPath";
-			edtTargetPath.Size = new System.Drawing.Size(230, 20);
-			edtTargetPath.TabIndex = 4;
+			this.edtTargetPath.Location = new System.Drawing.Point(16, 74);
+			this.edtTargetPath.Name = "edtTargetPath";
+			this.edtTargetPath.Size = new System.Drawing.Size(230, 20);
+			this.edtTargetPath.TabIndex = 4;
 			// 
 			// btnTarget
 			// 
-			btnTarget.Location = new System.Drawing.Point(252, 71);
-			btnTarget.Name = "btnTarget";
-			btnTarget.Size = new System.Drawing.Size(28, 23);
-			btnTarget.TabIndex = 5;
-			btnTarget.Text = "...";
-			btnTarget.UseVisualStyleBackColor = true;
-			btnTarget.Click += OnTargetClick;
+			this.btnTarget.Location = new System.Drawing.Point(252, 71);
+			this.btnTarget.Name = "btnTarget";
+			this.btnTarget.Size = new System.Drawing.Size(28, 23);
+			this.btnTarget.TabIndex = 5;
+			this.btnTarget.Text = "...";
+			this.btnTarget.UseVisualStyleBackColor = true;
+			this.btnTarget.Click += new System.EventHandler(this.OnTargetClick);
 			// 
 			// btnOk
 			// 
-			btnOk.DialogResult = DialogResult.OK;
-			btnOk.Location = new System.Drawing.Point(56, 109);
-			btnOk.Name = "btnOk";
-			btnOk.Size = new System.Drawing.Size(75, 23);
-			btnOk.TabIndex = 6;
-			btnOk.Text = "OK";
-			btnOk.UseVisualStyleBackColor = true;
-			btnOk.Click += OnOkClick;
+			this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnOk.Location = new System.Drawing.Point(56, 109);
+			this.btnOk.Name = "btnOk";
+			this.btnOk.Size = new System.Drawing.Size(75, 23);
+			this.btnOk.TabIndex = 6;
+			this.btnOk.Text = "OK";
+			this.btnOk.UseVisualStyleBackColor = true;
+			this.btnOk.Click += new System.EventHandler(this.OnOkClick);
 			// 
 			// btnCancel
 			// 
-			btnCancel.Location = new System.Drawing.Point(146, 109);
-			btnCancel.Name = "btnCancel";
-			btnCancel.Size = new System.Drawing.Size(75, 23);
-			btnCancel.TabIndex = 7;
-			btnCancel.Text = "Abbrechen";
-			btnCancel.UseVisualStyleBackColor = true;
+			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.btnCancel.Location = new System.Drawing.Point(146, 109);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 7;
+			this.btnCancel.Text = "Abbrechen";
+			this.btnCancel.UseVisualStyleBackColor = true;
 			// 
 			// openFileDialog
 			// 
-			openFileDialog.FileName = "Projektabrechnung.txt";
-			openFileDialog.Title = "Projektabrechnung auswählen";
-			// 
-			// folderBrowserDialog
-			// 
-			folderBrowserDialog.RootFolder = Environment.SpecialFolder.Personal;
+			this.openFileDialog.FileName = "Projektabrechnung.txt";
+			this.openFileDialog.Title = "Projektabrechnung auswählen";
 			// 
 			// Form1
 			// 
-			AcceptButton = btnOk;
-			CancelButton = btnCancel;
-			ClientSize = new System.Drawing.Size(292, 148);
-			Controls.Add(btnCancel);
-			Controls.Add(btnOk);
-			Controls.Add(btnTarget);
-			Controls.Add(edtTargetPath);
-			Controls.Add(btnSource);
-			Controls.Add(label2);
-			Controls.Add(edtSourceFile);
-			Controls.Add(label1);
-			Name = "Form1";
-			Text = "Projektabrechnung konvertieren";
-			Shown += Form1_Shown;
-			ResumeLayout(false);
-			PerformLayout();
+			this.AcceptButton = this.btnOk;
+			this.CancelButton = this.btnCancel;
+			this.ClientSize = new System.Drawing.Size(292, 148);
+			this.Controls.Add(this.btnCancel);
+			this.Controls.Add(this.btnOk);
+			this.Controls.Add(this.btnTarget);
+			this.Controls.Add(this.edtTargetPath);
+			this.Controls.Add(this.btnSource);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.edtSourceFile);
+			this.Controls.Add(this.label1);
+			this.Name = "Form1";
+			this.Text = "Projektabrechnung konvertieren";
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 

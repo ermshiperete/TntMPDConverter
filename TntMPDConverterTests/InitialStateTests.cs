@@ -26,7 +26,8 @@ namespace TntMPDConverterTests
 "Projekt\t301234  Mustermann, Markus\n" +
 "Zeitraum:\t01.09.2009 - 30.09.2009\n" +
 "\tErträge\tSoll €\tHaben €\n" +
-"\t7100\tSpenden (wiss.) Arbeit\t3.694,59\n" +"\t16747\t01.09.2009\t10,23\tH\tKD \tMerkel, Angela");
+"\t7100\tSpenden (wiss.) Arbeit\t3.694,59\n" +
+"\t16747\t01.09.2009\t10,23\tH\tKD \tMerkel, Angela");
 		}
 
 		///--------------------------------------------------------------------------------------
