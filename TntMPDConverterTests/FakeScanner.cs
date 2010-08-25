@@ -21,7 +21,7 @@ namespace TntMPDConverterTests
 			}
 			if (m_Index >= m_Lines.Length)
 				return null;
-			return m_Lines[m_Index++];
+			return m_Lines[m_Index++].TrimEnd('\r');
 		}
 
 		public override bool EndOfStream

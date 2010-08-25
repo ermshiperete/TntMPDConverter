@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using TntMPDConverter.Properties;
@@ -44,6 +45,7 @@ namespace TntMPDConverter
             return CheckForStartOfNewState(line) ?? new Ignore(Reader);
         }
 
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public virtual Donation NextDonation
         {
             get
@@ -58,7 +60,7 @@ namespace TntMPDConverter
                         string[] strings = line.Split(new[] { '\t' });
                         if (strings.Length != 7)
                         {
-                            if (!strings[0].StartsWith("Projekt"))
+                            if (!strings[0].StartsWith("Projekt") && !strings[0].StartsWith("\fProjekt"))
                             {
                                 Reader.UnreadLine(line);
                                 IsValid = false;

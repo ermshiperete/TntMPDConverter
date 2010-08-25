@@ -128,5 +128,26 @@ namespace TntMPDConverterTests
 			AssertDonationEqual(new Donation(80, new DateTime(2010, 06, 01), "Mustermann, Markus", 997),
 				donation);
 		}
+
+		[Test]
+		public void SkipPageBreak()
+		{
+			var reader = new FakeScanner(@"
+	16448	22.06.2010	51,13	H	KD 	Mustermann, Markus
+	21860	25.06.2010	80,00	H	KD 	Mueller, Frieda
+Projekt	12345  Missionar, Fritz	Soll €	Haben €
+	16800	28.06.2010	26,00	H	KD 	doppelt
+	11706	30.06.2010	16,00	H	KD 	Musterfrau, Elfriede");
+			var processingDonations = new MyProcessingDonations(reader);
+			MyProcessingDonations.SetReplacementFileName(ReplacementFileName);
+			AssertDonationEqual(new Donation(51.13m, new DateTime(2010, 06, 22), "Mustermann, Markus", 16448),
+				processingDonations.NextDonation);
+			AssertDonationEqual(new Donation(80.00m, new DateTime(2010, 06, 25), "Mueller, Frieda", 21860),
+				processingDonations.NextDonation);
+			AssertDonationEqual(new Donation(26.00m, new DateTime(2010, 06, 28), "doppelt", 16800),
+				processingDonations.NextDonation);
+			AssertDonationEqual(new Donation(16.00m, new DateTime(2010, 06, 30), "Musterfrau, Elfriede", 11706),
+				processingDonations.NextDonation);
+		}
 	}
 }
