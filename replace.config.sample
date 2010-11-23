@@ -1,0 +1,14 @@
+# Beispieldatei - bitte in replace.config umbenennen
+# 
+# Diese Datei erlaubt die Suche nach einer Zeichenkette innerhalb der Beschreibung.
+# Wird die Zeichenkette gefunden, dann wird die Beschreibung durch den neuen
+# Spendernamen ersetzt und die neue Spendernummer verwendet.
+# Dies ist nützlich für regelmäßige Buchungen wie diese:
+# 999	01.06.2010	80,00	H	KD	ungen. ueberw. durch Markus Mustermann
+#
+# In der TntMPD-Datei taucht diese Buchung dann so auf:
+# "997","Mustermann, Markus","6/1/2010","80.00","1234","3333",""
+
+[999]
+Markus Mustermann=997; "Mustermann, Markus"
+F. Mueller=996; Mueller, Franz
