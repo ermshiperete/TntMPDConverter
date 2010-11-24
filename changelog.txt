@@ -1,2 +1,5 @@
 2010-08-25 Version 1.1.3
 * Fixed problem with RTF conversion: converted text contains form feed character that wasn't handled properly.
+
+2010-11-24 Version 1.1.4
+* Fixed problem with RTF conversion on Linux.

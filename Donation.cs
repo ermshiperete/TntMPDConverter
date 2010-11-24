@@ -1,9 +1,9 @@
 namespace TntMPDConverter
 {
-    using System;
+	using System;
 
-    public class Donation
-    {
+	public class Donation
+	{
 		public Donation()
 		{
 		}
@@ -15,11 +15,11 @@ namespace TntMPDConverter
 			Donor = donor;
 		}
 
-        public decimal Amount;
-        public string BookingId;
-        public DateTime Date;
-        public string Donor;
-        public int DonorNo;
-    }
+		public decimal Amount;
+		public string BookingId;
+		public DateTime Date;
+		public string Donor;
+		public int DonorNo;
+	}
 }
 

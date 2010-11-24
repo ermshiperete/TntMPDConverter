@@ -3,29 +3,28 @@ using System.Text.RegularExpressions;
 
 namespace TntMPDConverter
 {
-	public class Project: State
+	public class Project : State
 	{
-		public Project(Scanner reader)
-			: base(reader)
-        {
-        }
+		public Project(Scanner reader) : base(reader)
+		{
+		}
 
-        public override State NextState()
-        {
-        	ProcessProjectNo();
-            for (var line = Reader.ReadLine(); !Reader.EndOfStream; line = Reader.ReadLine())
-            {
-                if (Account.IsAccount(line))
-                {
-                    Reader.UnreadLine(line);
-                    break;
-                }
-            }
-            if (Reader.EndOfStream)
-                return new End(Reader);
+		public override State NextState()
+		{
+			ProcessProjectNo();
+			for (var line = Reader.ReadLine(); !Reader.EndOfStream; line = Reader.ReadLine())
+			{
+				if (Account.IsAccount(line))
+				{
+					Reader.UnreadLine(line);
+					break;
+				}
+			}
+			if (Reader.EndOfStream)
+				return new End(Reader);
 
 			return new Account(Reader);
-        }
+		}
 
 		public static bool IsProject(string line)
 		{
@@ -33,7 +32,11 @@ namespace TntMPDConverter
 			return regex.IsMatch(line);
 		}
 
-		public int ProjectNo { get; private set; }
+		public int ProjectNo
+		{
+			get;
+			private set;
+		}
 
 		protected void ProcessProjectNo()
 		{
