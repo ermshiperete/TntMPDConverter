@@ -4,7 +4,7 @@ using System.IO;
 using NUnit.Framework;
 using TntMPDConverter;
 
-namespace TntMPDConverterTests
+namespace TntMPDConverter
 {
 	/// ----------------------------------------------------------------------------------------
 	/// <summary>

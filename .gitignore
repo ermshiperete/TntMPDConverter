@@ -1,2 +1,7 @@
 *.resources
+*.pidb
+*.userprefs
+*~
+test-results/
 bin/
+released/

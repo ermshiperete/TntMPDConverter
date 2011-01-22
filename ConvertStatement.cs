@@ -70,7 +70,7 @@ namespace TntMPDConverter
 			var builder = new StringBuilder();
 			builder.AppendLine("[GIFTS]");
 			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\"");
-			var info1 = new CultureInfo("en-US", false);
+			var cultureInfo = new CultureInfo("en-US", false);
 			while (state != null)
 			{
 				if (state is Account)
@@ -82,12 +82,14 @@ namespace TntMPDConverter
 						var donation = processingDonations.NextDonation;
 						if (donation != null)
 						{
-							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\"", donation.DonorNo, donation.Donor, donation.Date.ToString("d", info1), donation.Amount.ToString(info1), donation.BookingId, projectNo));
+							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\"",
+									donation.DonorNo, donation.Donor,
+									donation.Date.ToString("d", cultureInfo),
+									donation.Amount.ToString(cultureInfo),
+									donation.BookingId, projectNo));
 						}
 					}
 				}
-
-
 				else if (!(state is Ignore))
 				{
 					break;
@@ -104,7 +106,7 @@ namespace TntMPDConverter
 			StringBuilder builder1 = new StringBuilder();
 			builder1.AppendLine("[DONORS]");
 			builder1.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"ADDR1\",\"AMOUNT\"");
-			CultureInfo info1 = new CultureInfo("en-US");
+			CultureInfo cultureInfo = new CultureInfo("en-US");
 			while (state != null)
 			{
 				if (state is Account)
@@ -116,7 +118,7 @@ namespace TntMPDConverter
 						Donation donation1 = donations1.NextDonation;
 						if (donation1 != null)
 						{
-							builder1.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\"", new object[] { donation1.DonorNo, donation1.Donor, donation1.Date.ToString("d", info1), donation1.Amount.ToString(info1) }));
+							builder1.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\"", new object[] { donation1.DonorNo, donation1.Donor, donation1.Date.ToString("d", cultureInfo), donation1.Amount.ToString(cultureInfo) }));
 						}
 					}
 				}

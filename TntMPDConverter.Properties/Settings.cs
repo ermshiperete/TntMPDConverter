@@ -15,13 +15,6 @@ namespace TntMPDConverter.Properties
 		}
 
 
-		[DebuggerNonUserCode, UserScopedSetting, DefaultSettingValue("1")]
-		public int BookingId
-		{
-			get { return (int)this["BookingId"]; }
-			set { this["BookingId"] = value; }
-		}
-
 		[DebuggerNonUserCode, UserScopedSetting, DefaultSettingValue("false")]
 		public bool UpgradeDone
 		{

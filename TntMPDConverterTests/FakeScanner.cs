@@ -1,6 +1,4 @@
-﻿using TntMPDConverter;
-
-namespace TntMPDConverterTests
+﻿namespace TntMPDConverter
 {
 	public class FakeScanner: Scanner
 	{

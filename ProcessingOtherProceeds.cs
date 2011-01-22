@@ -13,41 +13,38 @@ namespace TntMPDConverter
 		{
 			get
 			{
-				var info1 = new CultureInfo("de-DE");
-				Donation donation1 = null;
-				string text1 = Reader.ReadLine();
+				var cultureInfo = new CultureInfo("de-DE");
+				Donation donation = null;
+				string line = Reader.ReadLine();
 				while (true)
 				{
-					if (text1.Trim() != "")
+					if (line.Trim() != "")
 					{
-						string[] textArray1 = text1.Split(new[] { '\t' });
+						string[] textArray1 = line.Split(new[] { '\t' });
 						if (textArray1.Length != 6)
 						{
 							if (!textArray1[0].StartsWith("Projekt"))
 							{
-								Reader.UnreadLine(text1);
+								Reader.UnreadLine(line);
 								IsValid = false;
-								return donation1;
+								return donation;
 							}
 						}
 						else
 						{
-							donation1 = new Donation { DonorNo = 998, Date = Convert.ToDateTime(textArray1[1], info1), Amount = Convert.ToDecimal(textArray1[2], info1) };
+							donation = new Donation { DonorNo = 998, Date = Convert.ToDateTime(textArray1[1], cultureInfo), Amount = Convert.ToDecimal(textArray1[2], cultureInfo) };
 							if (textArray1[3] == "S")
 							{
-								donation1.Amount = -donation1.Amount;
+								donation.Amount = -donation.Amount;
 							}
-							donation1.Donor = textArray1[5];
-							Properties.Settings.Default.BookingId++;
-							donation1.BookingId = Properties.Settings.Default.BookingId.ToString();
-							return donation1;
+							donation.Donor = textArray1[5];
+							return donation;
 						}
 					}
-					text1 = Reader.ReadLine();
+					line = Reader.ReadLine();
 				}
 			}
 		}
-
 	}
 }
 

@@ -83,9 +83,6 @@ namespace TntMPDConverter
 							{
 								donation.Amount = -donation.Amount;
 							}
-							var settings = Settings.Default;
-							settings.BookingId++;
-							donation.BookingId = Settings.Default.BookingId.ToString();
 							donation.Donor = strings[6];
 							if (ReplacementInfo.ContainsKey(donation.DonorNo))
 							{
