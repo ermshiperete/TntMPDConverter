@@ -28,7 +28,7 @@ namespace TntMPDConverter
 
 		public static bool IsProject(string line)
 		{
-			var regex = new Regex("Projekt\t[0-9]+  [^\t]+");
+			var regex = new Regex("Projekt:?\t[0-9]+  [^\t]+");
 			return regex.IsMatch(line);
 		}
 
@@ -41,7 +41,7 @@ namespace TntMPDConverter
 		protected void ProcessProjectNo()
 		{
 			var line = Reader.ReadLine();
-			var regex = new Regex("Projekt\t(?<no>[0-9]+)");
+			var regex = new Regex("Projekt:?\t(?<no>[0-9]+)");
 			ProjectNo = Convert.ToInt32(regex.Match(line).Groups["no"].Value);
 		}
 	}

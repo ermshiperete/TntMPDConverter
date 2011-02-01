@@ -41,6 +41,17 @@ namespace TntMPDConverter
 			Assert.IsTrue(Project.IsProject("Projekt\t301234  Mustermann, Markus\tSoll €\tHaben €"));
 		}
 
+		///--------------------------------------------------------------------------------------
+		/// <summary>
+		/// Tests that project state recognizes the project
+		/// </summary>
+		///--------------------------------------------------------------------------------------
+		[Test]
+		public void IsProject2()
+		{
+			Assert.IsTrue(Project.IsProject("Projekt:\t301234  Mustermann, Markus\tSoll €\tHaben €"));
+		}
+
 		/// <summary>
 		/// Tests that the next state is Account
 		/// </summary>
