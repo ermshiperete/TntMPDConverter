@@ -32,11 +32,15 @@ namespace TntMPDConverter
 		public override State NextState()
 		{
 			ProcessAccountNo();
-			if ((m_AccountNo == 7100) || (m_AccountNo == 7800))
+			if ((m_AccountNo == 7100) || (m_AccountNo == 7800) ||
+				// new account numbers starting 1/2011
+				(m_AccountNo == 1191) || (m_AccountNo == 1197))
 			{
 				return new ProcessingDonations(Reader);
 			}
-			if (m_AccountNo == 8900)
+			if (m_AccountNo == 8900 ||
+				// new account numbers starting 1/2011
+				m_AccountNo == 3215)
 			{
 				return new ProcessingOtherProceeds(Reader);
 			}
