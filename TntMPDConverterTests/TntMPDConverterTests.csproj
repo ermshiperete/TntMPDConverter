@@ -68,6 +68,7 @@
     <Compile Include="ProjectTests.cs" />
     <Compile Include="DonationTests.cs" />
     <Compile Include="DonationManagerTests.cs" />
+    <Compile Include="ProcessDonorsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

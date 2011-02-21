@@ -157,6 +157,7 @@
     <EmbeddedResource Include="TntMPDConverter.Form1.resx" />
     <EmbeddedResource Include="TntMPDConverter.Properties.Resources.resx" />
     <Compile Include="DonationManager.cs" />
+    <Compile Include="Donor.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

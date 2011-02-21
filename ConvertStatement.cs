@@ -90,6 +90,10 @@ namespace TntMPDConverter
 						}
 					}
 				}
+				else if (state is ProcessDonors)
+				{
+					break;
+				}
 				else if (!(state is Ignore))
 				{
 					break;

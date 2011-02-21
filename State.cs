@@ -40,9 +40,7 @@ namespace TntMPDConverter
 					return null;
 				}
 			}
-
-
-			else if (line == "Spender\x00fcbersicht")
+			else if (ProcessDonors.IsDonors(line))
 			{
 				Reader.UnreadLine(line);
 				return new ProcessDonors(Reader);
