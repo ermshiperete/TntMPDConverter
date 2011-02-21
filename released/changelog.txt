@@ -1,3 +1,6 @@
+2011-02-15 Version 1.2.1
+* Fixed issue #2: adjusted for new account numbers
+
 2011-01-22 Version 1.2
 * Calculate booking id based on date, donor number and running number
 
