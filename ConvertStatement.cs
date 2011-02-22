@@ -18,7 +18,7 @@ namespace TntMPDConverter
 				donations = ProcessDonations(ref state);
 			}
 			string filename = Path.Combine(Settings.Default.TargetPath, Path.GetFileNameWithoutExtension(Settings.Default.SourceFile) + ".tntmpd");
-			using (StreamWriter writer = File.CreateText(filename))
+			using (var writer = new StreamWriter(File.Open(filename, FileMode.Create), Encoding.GetEncoding("Windows-1252")))
 			{
 				writer.WriteLine("[ORGANIZATION]");
 				writer.WriteLine("Name=Wycliff e.V.");
