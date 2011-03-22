@@ -11,8 +11,10 @@ namespace TntMPDConverter
 			Assert.AreEqual(expected.DonorNo, actual.DonorNo, "Wrong donor number");
 			Assert.AreEqual(expected.Name, actual.Name, "Wrong donor name");
 			Assert.AreEqual(expected.Street, actual.Street, "Wrong donor street");
+			Assert.AreEqual(expected.Plz, actual.Plz, "Wrong zip code");
 			Assert.AreEqual(expected.City, actual.City, "Wrong donor city");
-			Assert.AreEqual(expected.PhoneNos, actual.PhoneNos, "Wrong phone numbers");
+			CollectionAssert.AreEqual(expected.PhoneNos, actual.PhoneNos, "Wrong phone numbers");
+			Assert.AreEqual(expected.Email, actual.Email, "Wrong email");
 			Assert.AreEqual(expected.DonationsCount, actual.DonationsCount, "Wrong number of donations");
 			Assert.AreEqual(expected.Amount, actual.Amount, "Wrong donation amount");
 		}
@@ -24,8 +26,8 @@ namespace TntMPDConverter
 	77123 Irgendwo");
 
 			var donorProcessor = new ProcessDonors(reader);
-			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123 Irgendwo",
-					string.Empty, 1, 51.28m),
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new string[] { }, string.Empty, 1, 51.28m),
 				donorProcessor.NextDonor);
 		}
 
@@ -36,8 +38,8 @@ namespace TntMPDConverter
 	77123 Irgendwo");
 
 			var donorProcessor = new ProcessDonors(reader);
-			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123 Irgendwo",
-					"p: 02736/1234561", 1, 51.28m), donorProcessor.NextDonor);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new[] {"p: 02736/1234561"}, string.Empty, 1, 51.28m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -51,28 +53,102 @@ namespace TntMPDConverter
 	77123 Irgendwo");
 
 			var donorProcessor = new ProcessDonors(reader);
-			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123 Irgendwo",
-					"p: 02736/1234561, d: 01234/5678", 1, 51.28m), donorProcessor.NextDonor);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new[] {"p: 02736/1234561, d: 01234/5678"}, string.Empty, 1, 51.28m), donorProcessor.NextDonor);
 		}
 
-// second phone no + email
-//	14559	Beilharz, Heiner	Hochberg 22	p: 07403 914939	1	310,00	158,97
-//	78664 Eschbronn	07403-914939
-//	H.Beilharz@gmx.net
+		/// <summary>
+		/// Contains second phone number and email address
+		/// </summary>
+		[Test]
+		public void DonorSecondPhoneAndEmail()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	p: 02736/1234561	1	100,00	51,28
+	77123 Irgendwo	02736-9876
+	markus@example.com");
 
-// phone no + email
-//	4078	Beilharz, Christine	Buchenstr. 7	p: 07032/330843	1	300,00	153,85
-//	71126 Gäufelden
-//	c.beilharz@gmx.net
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new[] { "p: 02736/1234561", "02736-9876"}, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+		}
 
-// continued phone no + email
-//	15800	Bourwieg, Karsten	Cäsariusstr. 6	p: 0228-9090790  d: +49 (0)228 	1	80,00	41,03
-//	14-5760
-//	53173 Bonn
-//	bourwieg@hotmail.com
+		/// <summary>
+		/// Contains second phone number
+		/// </summary>
+		[Test]
+		public void DonorSecondPhone()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	p: 02736/1234561	1	100,00	51,28
+	77123 Irgendwo	02736-9876");
 
-// no phone, email
-// second phone
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new[] { "p: 02736/1234561", "02736-9876" }, string.Empty, 1, 51.28m), donorProcessor.NextDonor);
+		}
+
+		/// <summary>
+		/// Contains phone number and email address
+		/// </summary>
+		[Test]
+		public void DonorPhoneAndEmail()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	p: 02736/1234561	1	100,00	51,28
+	77123 Irgendwo
+	markus@example.com");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new[] { "p: 02736/1234561" }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+		}
+
+		/// <summary>
+		/// Contains phone number that stretches over two lines and email address
+		/// </summary>
+		[Test]
+		public void DonorLongPhoneAndEmail()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	p: 02736/1234561, d: 012	1	100,00	51,28
+	34/5678
+	77123 Irgendwo
+	markus@example.com");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new[] { "p: 02736/1234561, d: 01234/5678" }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+		}
+
+		/// <summary>
+		/// Contains only email address
+		/// </summary>
+		[Test]
+		public void DonorEmail()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	1	100,00	51,28
+	77123 Irgendwo
+	markus@example.com");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new string[] {  }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+		}
+
+		/// <summary>
+		/// Tests that we skip to the start of addresses
+		/// </summary>
+		[Test]
+		public void SkipToDonor()
+		{
+			var reader = new FakeScanner(@"Spenderübersicht
+Spender-	Telefon (privat, dienstl.)	Spenden
+Nr.	Name	Adresse	Fax, E-Mail	Anz.	€	€*
+	16805	Mustermann, Markus	Schlossallee 14	1	100,00	51,28
+	77123 Irgendwo");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14",
+					"77123", "Irgendwo", new string[] {  }, string.Empty, 1, 51.28m),
+				donorProcessor.NextDonor);
+		}
 	}
 }
 

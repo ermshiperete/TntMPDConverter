@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -9,13 +10,17 @@ namespace TntMPDConverter
 {
 	internal class ConvertStatement
 	{
+		private Dictionary<int, Donation> m_Donations = new Dictionary<int, Donation>();
+
 		public void DoConversion()
 		{
 			string donations;
+			string donors;
 			using (var reader = new StringReader(ConvertToText(Settings.Default.SourceFile)))
 			{
 				var state = State.Initialize(reader).NextState();
 				donations = ProcessDonations(ref state);
+				donors = ProcessDonors(ref state);
 			}
 			string filename = Path.Combine(Settings.Default.TargetPath, Path.GetFileNameWithoutExtension(Settings.Default.SourceFile) + ".tntmpd");
 			using (var writer = new StreamWriter(File.Open(filename, FileMode.Create), Encoding.GetEncoding("Windows-1252")))
@@ -24,6 +29,7 @@ namespace TntMPDConverter
 				writer.WriteLine("Name=Wycliff e.V.");
 				writer.WriteLine("Abbreviation=Wycliff");
 				writer.WriteLine("Code=GED");
+				writer.WriteLine(donors);
 				writer.Write(donations);
 			}
 		}
@@ -58,7 +64,7 @@ namespace TntMPDConverter
 			}
 		}
 
-		private static string ProcessDonations(ref State state)
+		private string ProcessDonations(ref State state)
 		{
 			var projectNo = 0;
 			var project = state as Project;
@@ -87,12 +93,9 @@ namespace TntMPDConverter
 									donation.Date.ToString("d", cultureInfo),
 									donation.Amount.ToString(cultureInfo),
 									donation.BookingId, projectNo));
+							m_Donations.Add(donation.DonorNo, donation);
 						}
 					}
-				}
-				else if (state is ProcessDonors)
-				{
-					break;
 				}
 				else if (!(state is Ignore))
 				{
@@ -103,27 +106,40 @@ namespace TntMPDConverter
 			return builder.ToString();
 		}
 
-	}
-	/*
 		private string ProcessDonors(ref State state)
 		{
-			StringBuilder builder1 = new StringBuilder();
-			builder1.AppendLine("[DONORS]");
-			builder1.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"ADDR1\",\"AMOUNT\"");
-			CultureInfo cultureInfo = new CultureInfo("en-US");
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("[DONORS]");
+			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"PERSON_TYPE\"," + 
+				"\"LAST_NAME_ORG\",\"FIRST_NAME\",\"MIDDLE_NAME\",\"TITLE\",\"SUFFIX\"," + 
+				"\"SP_LAST_NAME\",\"SP_FIRST_NAME\",\"SP_MIDDLE_NAME\",\"SP_TITLE\",\"SP_SUFFIX\"," + 
+				"\"ADDR1\",\"ADDR2\",\"ADDR3\",\"ADDR4\",\"CITY\"," + 
+				"\"STATE\",\"ZIP\",\"COUNTRY\",\"CNTRY_DESCR\",\"ADDR_CHANGED\"," + 
+				"\"PHONE\",\"PHONE_CHANGED\"");
 			while (state != null)
 			{
-				if (state is Account)
+				var processDonors = state as ProcessDonors;
+				if (processDonors != null)
 				{
-					state = state.NextState();
-					ProcessingDonations donations1 = state as ProcessingDonations;
-					while ((donations1 != null) && donations1.StateValid)
+					var donor = processDonors.NextDonor;
+					if (donor != null)
 					{
-						Donation donation1 = donations1.NextDonation;
-						if (donation1 != null)
-						{
-							builder1.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\"", new object[] { donation1.DonorNo, donation1.Donor, donation1.Date.ToString("d", cultureInfo), donation1.Amount.ToString(cultureInfo) }));
-						}
+						builder.AppendFormat("\"{0}\",\"{1}\",\"{2}\"," + 
+							// Person
+							"\"{3}\",\"{4}\",,\"{5}\",," + 
+							// Spouse
+							"\"{6}\",\"{7}\",,\"{8}\",," + 
+							// Address
+							"\"{9}\",,,,\"{10}\",,\"{11}\",\"DE\",\"Germany\",," + 
+							// Phone
+							"\"{12}\",\" \"", 
+							donor.DonorNo, donor.Name, donor.PersonType, 
+							donor.LastName, donor.FirstName, donor.Title, 
+							donor.SpouseLastName, donor.SpouseFirstName, donor.SpouseTitle,
+							donor.Street, donor.City, donor.Plz, 
+							donor.CombinedPhoneNo);
+						builder.AppendLine();
+						m_Donations.Remove(donor.DonorNo);
 					}
 				}
 				else if (!(state is Ignore))
@@ -132,9 +148,23 @@ namespace TntMPDConverter
 				}
 				state = state.NextState();
 			}
-			return builder1.ToString();
+
+			// Add pseudo-donors for all donations that are left over
+			foreach (var donationKeyValue in m_Donations)
+			{
+				builder.AppendFormat("\"{0}\",\"{1}\",\"O\"," + 
+					// Person
+					"\"Unbekannt\",\" \",,," + 
+					// Spouse
+					",,,,," + 
+					// Address
+					"\" \",,,,\" \",,\" \",\"DE\",\"Germany\",," + 
+					// Phone
+					"\" \",\" \"", 
+					donationKeyValue.Value.DonorNo, donationKeyValue.Value.Donor);
+				builder.AppendLine();
+			}
+			return builder.ToString();
 		}
-*/
-
+	}
 }
-

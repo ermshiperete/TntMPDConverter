@@ -1,3 +1,6 @@
+2011-06-15 Version 1.3
+* Process address information (issue #3).
+
 2011-04-12 Version 1.2.3
 * Added additional account 1185 for processing donations
 
