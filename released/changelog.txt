@@ -1,3 +1,6 @@
+2011-04-12 Version 1.2.3
+* Added additional account 1185 for processing donations
+
 2011-02-21 Version 1.2.2
 * Fixed issue #1: save file with correct encoding so that umlaut characters show up correctly in TntMPD
 

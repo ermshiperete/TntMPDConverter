@@ -34,7 +34,7 @@ namespace TntMPDConverter
 			ProcessAccountNo();
 			if ((m_AccountNo == 7100) || (m_AccountNo == 7800) ||
 				// new account numbers starting 1/2011
-				(m_AccountNo == 1191) || (m_AccountNo == 1197))
+				(m_AccountNo == 1191) || (m_AccountNo == 1197) || (m_AccountNo == 1185))
 			{
 				return new ProcessingDonations(Reader);
 			}
