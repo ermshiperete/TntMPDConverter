@@ -88,12 +88,15 @@ namespace TntMPDConverter
 						var donation = processingDonations.NextDonation;
 						if (donation != null)
 						{
-							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\"",
-									donation.DonorNo, donation.Donor,
-									donation.Date.ToString("d", cultureInfo),
-									donation.Amount.ToString(cultureInfo),
+							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\"", 
+									donation.DonorNo, donation.Donor, 
+									donation.Date.ToString("d", cultureInfo), 
+									donation.Amount.ToString(cultureInfo), 
 									donation.BookingId, projectNo));
-							m_Donations.Add(donation.DonorNo, donation);
+							// we use m_Donations to track donations without donor address,
+							// so it doesn't matter if we override one if one donor has made
+							// multiple donations.
+							m_Donations[donation.DonorNo] = donation;
 						}
 					}
 				}
