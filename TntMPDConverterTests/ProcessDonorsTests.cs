@@ -32,6 +32,18 @@ namespace TntMPDConverter
 		}
 
 		[Test]
+		public void DonorLargeAmount()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	1	2.100,00	1.051,28
+	77123 Irgendwo");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new string[] { }, string.Empty, 1, 1051.28m),
+				donorProcessor.NextDonor);
+		}
+
+		[Test]
 		public void DonorWithPhone()
 		{
 			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	p: 02736/1234561	1	100,00	51,28
