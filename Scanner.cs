@@ -17,11 +17,14 @@ namespace TntMPDConverter
 		{
 			if (m_line != null)
 			{
+				Debug.WriteLine("Scanner.ReadLine(): reading unread line: " + m_line);
 				var line = m_line;
 				m_line = null;
 				return line;
 			}
-			return m_reader.ReadLine();
+			var l = m_reader.ReadLine();
+			Debug.WriteLine("Scanner.ReadLine(): " + l);
+			return l;
 		}
 
 		public void UnreadLine(string line)

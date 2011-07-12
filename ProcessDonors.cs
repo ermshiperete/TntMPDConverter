@@ -32,7 +32,9 @@ namespace TntMPDConverter
 		private string FirstDonorLine()
 		{
 			string line;
-			for (line = Reader.ReadLine(); !donorInfo.IsMatch(line); line = Reader.ReadLine())
+			for (line = Reader.ReadLine();
+				!string.IsNullOrEmpty(line) && !donorInfo.IsMatch(line);
+				line = Reader.ReadLine())
 				;
 			return line;
 		}
@@ -43,10 +45,10 @@ namespace TntMPDConverter
 			{
 				var line = FirstDonorLine();
 				var secondLine = Reader.ReadLine();
-				if (donorInfo.IsMatch(line))
+				if (!string.IsNullOrEmpty(line) && donorInfo.IsMatch(line))
 				{
 					var cityLine = secondLine;
-					if (!cityInfo.IsMatch(secondLine))
+					if (string.IsNullOrEmpty(secondLine) || !cityInfo.IsMatch(secondLine))
 						cityLine = Reader.ReadLine();
 					var donorInfoMatch = donorInfo.Match(line);
 					var cityMatch = cityInfo.Match(cityLine);

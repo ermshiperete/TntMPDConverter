@@ -1,3 +1,6 @@
+2011-07-12 Version 1.3.3
+* Fixed crash when donor list ends with page break
+
 2011-06-15 Version 1.3.2
 * Fixed bug with large donation amount in address information
 
