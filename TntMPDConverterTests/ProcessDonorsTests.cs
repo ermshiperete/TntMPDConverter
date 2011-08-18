@@ -161,6 +161,24 @@ Nr.	Name	Adresse	Fax, E-Mail	Anz.	€	€*
 					"77123", "Irgendwo", new string[] {  }, string.Empty, 1, 51.28m),
 				donorProcessor.NextDonor);
 		}
+
+		/// <summary>
+		/// Contains multiline organization name
+		/// </summary>
+		[Test]
+		[Ignore("Issue #4")]
+		public void DonorMultilineOrganization()
+		{
+			var reader = new FakeScanner(@"	16805	Organization	Schlossallee 14	1	100,00	51,28
+	Irgendwo
+	77123 Irgendwo
+	markus@example.com");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Organization Irgendwo", "Schlossallee 14", "77123", "Irgendwo",
+					new string[] {  }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+		}
+
 	}
 }
 
