@@ -152,21 +152,21 @@ namespace TntMPDConverter
 				state = state.NextState();
 			}
 
-			// Add pseudo-donors for all donations that are left over
-			foreach (var donationKeyValue in m_Donations)
-			{
-				builder.AppendFormat("\"{0}\",\"{1}\",\"O\"," + 
-					// Person
-					"\"Unbekannt\",\" \",,," + 
-					// Spouse
-					",,,,," + 
-					// Address
-					"\" \",,,,\" \",,\" \",\"DE\",\"Germany\",," + 
-					// Phone
-					"\" \",\" \"", 
-					donationKeyValue.Value.DonorNo, donationKeyValue.Value.Donor);
-				builder.AppendLine();
-			}
+//			// Add pseudo-donors for all donations that are left over
+//			foreach (var donationKeyValue in m_Donations)
+//			{
+//				builder.AppendFormat("\"{0}\",\"{1}\",\"O\"," +
+//					// Person
+//					"\"Unbekannt\",\" \",,," +
+//					// Spouse
+//					",,,,," +
+//					// Address
+//					"\" \",,,,\" \",,\" \",\"DE\",\"Germany\",," +
+//					// Phone
+//					"\" \",\" \"",
+//					donationKeyValue.Value.DonorNo, donationKeyValue.Value.Donor);
+//				builder.AppendLine();
+//			}
 			return builder.ToString();
 		}
 	}

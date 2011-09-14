@@ -21,7 +21,7 @@ namespace TntMPDConverter
 				Settings.Default.TargetPath = edtTargetPath.Text;
 				var statement1 = new ConvertStatement();
 				statement1.DoConversion();
-				MessageBox.Show("Konvertierung abgeschlossen" + Environment.NewLine, "TntMPDConverter");
+				MessageBox.Show("Konvertierung abgeschlossen", "TntMPDConverter");
 				Settings.Default.Save();
 			}
 		}
