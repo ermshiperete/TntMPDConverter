@@ -1,11 +1,12 @@
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Windows.Forms;
+using SIL.Utils.FileDialog;
+using TntMPDConverter.Properties;
+
 namespace TntMPDConverter
 {
-	using System;
-	using System.ComponentModel;
-	using System.IO;
-	using System.Windows.Forms;
-	using Properties;
-
 	public class Form1 : Form
 	{
 		public Form1()
@@ -28,24 +29,32 @@ namespace TntMPDConverter
 
 		private void OnSourceClick(object sender, EventArgs e)
 		{
-			openFileDialog.FileName = edtSourceFile.Text;
-			if (openFileDialog.ShowDialog() == DialogResult.OK)
+			using (var openFileDialog = new OpenFileDialogAdapter())
 			{
-				edtSourceFile.Text = openFileDialog.FileName;
-				if (edtTargetPath.Text.Length == 0)
+				openFileDialog.Filter = "RTF Dateien|*.rtf|Alle Dateien|*.*";
+				openFileDialog.Title = "Projektabrechnung ausw\u00e4hlen";
+				openFileDialog.FileName = edtSourceFile.Text;
+				if (openFileDialog.ShowDialog() == DialogResult.OK)
 				{
-					edtTargetPath.Text = Path.GetDirectoryName(openFileDialog.FileName);
+					edtSourceFile.Text = openFileDialog.FileName;
+					if (edtTargetPath.Text.Length == 0)
+					{
+						edtTargetPath.Text = Path.GetDirectoryName(openFileDialog.FileName);
+					}
 				}
 			}
 		}
 
 		private void OnTargetClick(object sender, EventArgs e)
 		{
-			folderBrowserDialog.SelectedPath = edtTargetPath.Text.Length > 0 && edtSourceFile.Text.Length > 0 ? Path.GetDirectoryName(edtSourceFile.Text) : edtTargetPath.Text.Length > 0 ? edtTargetPath.Text : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+			using (var folderBrowserDialog = new FolderBrowserDialogAdapter())
 			{
-				edtTargetPath.Text = folderBrowserDialog.SelectedPath;
+				folderBrowserDialog.SelectedPath = edtTargetPath.Text.Length > 0 && edtSourceFile.Text.Length > 0 ? Path.GetDirectoryName(edtSourceFile.Text) : edtTargetPath.Text.Length > 0 ? edtTargetPath.Text : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+				if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+				{
+					edtTargetPath.Text = folderBrowserDialog.SelectedPath;
+				}
 			}
 		}
 
@@ -74,8 +83,6 @@ namespace TntMPDConverter
 			this.btnTarget = new System.Windows.Forms.Button();
 			this.btnOk = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
-			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.SuspendLayout();
 			//
 			// label1
@@ -151,14 +158,9 @@ namespace TntMPDConverter
 			this.btnCancel.Text = "Abbrechen";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			//
-			// openFileDialog
-			//
-			this.openFileDialog.FileName = "Projektabrechnung.txt";
-			this.openFileDialog.Filter = "RTF Dateien|*.rtf|Alle Dateien|*.*";
-			this.openFileDialog.Title = "Projektabrechnung auswählen";
-			//
 			// Form1
 			//
+			this.AutoScaleMode = AutoScaleMode.Font;
 			this.AcceptButton = this.btnOk;
 			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(292, 148);
@@ -185,10 +187,8 @@ namespace TntMPDConverter
 		private Component components = new Component();
 		private TextBox edtSourceFile;
 		private TextBox edtTargetPath;
-		private FolderBrowserDialog folderBrowserDialog;
 		private Label label1;
 		private Label label2;
-		private OpenFileDialog openFileDialog;
 	}
 }
 
