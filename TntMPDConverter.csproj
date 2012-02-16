@@ -74,6 +74,8 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="cp ${TargetFile} ${SolutionDir}/released" />
+        <Command type="AfterBuild" command="cp -r ${ProjectDir}/Libs/linux ${SolutionDir}/released" />
+        <Command type="AfterBuild" command="cp -r ${ProjectDir}/Libs/windows ${SolutionDir}/released" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -97,7 +99,7 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="SilUtils">
-      <HintPath>Libs\SilUtils.dll</HintPath>
+      <HintPath>Libs\windows\SilUtils.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

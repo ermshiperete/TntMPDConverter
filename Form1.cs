@@ -50,7 +50,7 @@ namespace TntMPDConverter
 			using (var folderBrowserDialog = new FolderBrowserDialogAdapter())
 			{
 				folderBrowserDialog.SelectedPath = edtTargetPath.Text.Length > 0 && edtSourceFile.Text.Length > 0 ? Path.GetDirectoryName(edtSourceFile.Text) : edtTargetPath.Text.Length > 0 ? edtTargetPath.Text : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
+				folderBrowserDialog.Description = "Zielverzeichnis ausw\u00e4hlen";
 				if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 				{
 					edtTargetPath.Text = folderBrowserDialog.SelectedPath;

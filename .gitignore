@@ -6,4 +6,6 @@ test-results/
 bin/
 released/TntMPDConverter.exe
 released/replace.config
+released/linux/
+released/windows/
 TntMPDConverter.wiki/

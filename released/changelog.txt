@@ -1,3 +1,7 @@
+2012-02-16 Version 1.4.1
+* fix issue #6: crash on Windows clicking file chooser button
+* Display title in browse folder dialog
+
 2012-02-08 Version 1.4
 * adjust for new account numbers. Supported account numbers are now 7100, 7800, 8900, 3215,
   1191, 1197, 1185, 3220, and 3231.
