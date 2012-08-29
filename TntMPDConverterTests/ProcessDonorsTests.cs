@@ -27,7 +27,19 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new string[] { }, string.Empty, 1, 51.28m),
+					new string[] { }, string.Empty, 1, 100.00m),
+				donorProcessor.NextDonor);
+		}
+
+		[Test]
+		public void DonorNoPhoneEurOnly()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	1	100,00
+	77123 Irgendwo");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new string[] { }, string.Empty, 1, 100.00m),
 				donorProcessor.NextDonor);
 		}
 
@@ -39,7 +51,7 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new string[] { }, string.Empty, 1, 1051.28m),
+					new string[] { }, string.Empty, 1, 2100.00m),
 				donorProcessor.NextDonor);
 		}
 
@@ -51,7 +63,18 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new[] {"p: 02736/1234561"}, string.Empty, 1, 51.28m), donorProcessor.NextDonor);
+					new[] {"p: 02736/1234561"}, string.Empty, 1, 100.00m), donorProcessor.NextDonor);
+		}
+
+		[Test]
+		public void DonorWithPhoneEurOnly()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	p: 02736/1234561	1	100,00
+	77123 Irgendwo");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
+					new[] {"p: 02736/1234561"}, string.Empty, 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -66,7 +89,7 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new[] {"p: 02736/1234561, d: 01234/5678"}, string.Empty, 1, 51.28m), donorProcessor.NextDonor);
+					new[] {"p: 02736/1234561, d: 01234/5678"}, string.Empty, 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -81,7 +104,7 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new[] { "p: 02736/1234561", "02736-9876"}, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+					new[] { "p: 02736/1234561", "02736-9876"}, "markus@example.com", 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -95,7 +118,7 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new[] { "p: 02736/1234561", "02736-9876" }, string.Empty, 1, 51.28m), donorProcessor.NextDonor);
+					new[] { "p: 02736/1234561", "02736-9876" }, string.Empty, 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -110,7 +133,7 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new[] { "p: 02736/1234561" }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+					new[] { "p: 02736/1234561" }, "markus@example.com", 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -126,7 +149,7 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new[] { "p: 02736/1234561, d: 01234/5678" }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+					new[] { "p: 02736/1234561, d: 01234/5678" }, "markus@example.com", 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -141,7 +164,7 @@ namespace TntMPDConverter
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14", "77123", "Irgendwo",
-					new string[] {  }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+					new string[] {  }, "markus@example.com", 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 		/// <summary>
@@ -158,7 +181,7 @@ Nr.	Name	Adresse	Fax, E-Mail	Anz.	€	€*
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14",
-					"77123", "Irgendwo", new string[] {  }, string.Empty, 1, 51.28m),
+					"77123", "Irgendwo", new string[] {  }, string.Empty, 1, 100.00m),
 				donorProcessor.NextDonor);
 		}
 
@@ -176,7 +199,7 @@ Nr.	Name	Adresse	Fax, E-Mail	Anz.	€	€*
 
 			var donorProcessor = new ProcessDonors(reader);
 			AssertDonorEqual(new Donor(16805, "Organization Irgendwo", "Schlossallee 14", "77123", "Irgendwo",
-					new string[] {  }, "markus@example.com", 1, 51.28m), donorProcessor.NextDonor);
+					new string[] {  }, "markus@example.com", 1, 100.00m), donorProcessor.NextDonor);
 		}
 
 	}
