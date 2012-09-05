@@ -32,9 +32,9 @@ namespace TntMPDConverter
 		private string FirstDonorLine()
 		{
 			string line;
-			for (line = Reader.ReadLine();
+			for (line = Reader.ReadLineFiltered();
 				!string.IsNullOrEmpty(line) && !donorInfo.IsMatch(line);
-				line = Reader.ReadLine())
+				line = Reader.ReadLineFiltered())
 				;
 			return line;
 		}
@@ -44,12 +44,12 @@ namespace TntMPDConverter
 			get
 			{
 				var line = FirstDonorLine();
-				var secondLine = Reader.ReadLine();
+				var secondLine = Reader.ReadLineFiltered();
 				if (!string.IsNullOrEmpty(line) && donorInfo.IsMatch(line))
 				{
 					var cityLine = secondLine;
 					if (string.IsNullOrEmpty(secondLine) || !cityInfo.IsMatch(secondLine))
-						cityLine = Reader.ReadLine();
+						cityLine = Reader.ReadLineFiltered();
 					var donorInfoMatch = donorInfo.Match(line);
 					var cityMatch = cityInfo.Match(cityLine);
 					var donorNo = Convert.ToInt32(donorInfoMatch.Groups["no"].Value);
@@ -63,7 +63,7 @@ namespace TntMPDConverter
 						if (secondLine != cityLine)
 						{
 							// strip initial \t
-							phoneNos[0] += secondLine.Substring(1);
+							phoneNos[0] += secondLine.TrimStart('\t');
 						}
 					}
 					var phone2 = cityMatch.Groups["phone2"].Value;
@@ -71,13 +71,13 @@ namespace TntMPDConverter
 						phoneNos.Add(phone2);
 
 					var email = string.Empty;
-					var thirdLine = Reader.ReadLine();
+					var thirdLine = Reader.ReadLineFiltered();
 					if (string.IsNullOrEmpty(thirdLine) || donorInfo.IsMatch(thirdLine))
 						Reader.UnreadLine(thirdLine);
 					else
 					{
 						// strip initial \t
-						email = thirdLine.Substring(1);
+						email = thirdLine.TrimStart('\t');
 					}
 					return new Donor(donorNo, donorInfoMatch.Groups["name"].Value,
 						donorInfoMatch.Groups["street"].Value, cityMatch.Groups["plz"].Value,

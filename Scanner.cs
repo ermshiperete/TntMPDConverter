@@ -27,6 +27,16 @@ namespace TntMPDConverter
 			return l;
 		}
 
+		public string ReadLineFiltered()
+		{
+			var line = ReadLine();
+			while (!EndOfStream && (string.IsNullOrEmpty(line) || line.StartsWith("Projekt:") || line.StartsWith("\fProjekt:")))
+			{
+				line = ReadLine();
+			}
+			return line;
+		}
+
 		public void UnreadLine(string line)
 		{
 			m_line = line;

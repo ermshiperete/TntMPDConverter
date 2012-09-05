@@ -186,6 +186,23 @@ Nr.	Name	Adresse	Fax, E-Mail	Anz.	€	€*
 		}
 
 		/// <summary>
+		/// Tests that we skip a page break in the middle of an addresses
+		/// </summary>
+		[Test]
+		public void SkipPageBreak()
+		{
+			var reader = new FakeScanner(@"	16805	Mustermann, Markus	Schlossallee 14	1	100,00	51,28
+
+Projekt:	12345	Markus Missionar	Soll €	Haben €
+	77123 Irgendwo");
+
+			var donorProcessor = new ProcessDonors(reader);
+			AssertDonorEqual(new Donor(16805, "Mustermann, Markus", "Schlossallee 14",
+					"77123", "Irgendwo", new string[] {  }, string.Empty, 1, 100.00m),
+				donorProcessor.NextDonor);
+		}
+
+		/// <summary>
 		/// Contains multiline organization name
 		/// </summary>
 		[Test]
