@@ -24,7 +24,8 @@ namespace TntMPDConverter
 
 		static ProcessingDonations()
 		{
-			var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Substring(Environment.OSVersion.Platform == PlatformID.Unix ? 7 : 8));
+			var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase
+				.Substring(Environment.OSVersion.Platform == PlatformID.Unix ? 7 : 8));
 			ReplacementFileName = Path.GetFullPath(Path.Combine(dir, "replace.config"));
 			UpdateReplacementInfo();
 		}
@@ -52,7 +53,6 @@ namespace TntMPDConverter
 			return CheckForStartOfNewState(line) ?? new Ignore(Reader);
 		}
 
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		public virtual Donation NextDonation
 		{
 			get
@@ -74,11 +74,11 @@ namespace TntMPDConverter
 								return donation;
 							}
 						}
-
-
 						else
 						{
-							donation = new Donation { DonorNo = Convert.ToInt32(strings[1]), Date = Convert.ToDateTime(strings[2], info), Amount = Convert.ToDecimal(strings[3], info) };
+							donation = new Donation { DonorNo = Convert.ToInt32(strings[1]),
+								Date = Convert.ToDateTime(strings[2], info),
+								Amount = Convert.ToDecimal(strings[3], info) };
 							if (strings[4] == "S")
 							{
 								donation.Amount = -donation.Amount;
@@ -120,8 +120,6 @@ namespace TntMPDConverter
 						newDonors = new Dictionary<string, NewDonor>();
 						ReplacementInfo.Add(Convert.ToInt32(line.Substring(1, line.Length - 2)), newDonors);
 					}
-
-
 					else if (newDonors != null && line.Contains("="))
 					{
 						var parts = line.Split('=');
@@ -130,7 +128,9 @@ namespace TntMPDConverter
 						var donorInfo = parts[1].Split(';');
 						if (donorInfo.Length != 2)
 							continue;
-						newDonors.Add(parts[0], new NewDonor { DonorNo = Convert.ToInt32(donorInfo[0].Trim(' ')), Donor = donorInfo[1].Trim(' ').Trim('"') });
+						newDonors.Add(parts[0], new NewDonor {
+							DonorNo = Convert.ToInt32(donorInfo[0].Trim(' ')),
+							Donor = donorInfo[1].Trim(' ').Trim('"') });
 					}
 				}
 			}

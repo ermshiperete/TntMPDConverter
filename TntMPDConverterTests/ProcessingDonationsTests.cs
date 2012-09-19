@@ -65,7 +65,7 @@ namespace TntMPDConverter
 				writer.WriteLine("[999]");
 				writer.WriteLine("Markus Mustermann=997; \"Mustermann, Markus\"");
 				writer.WriteLine("F. Mueller=996; Mueller, Franz");
-			}			
+			}
 		}
 
 		[TestFixtureTearDown]
@@ -102,6 +102,7 @@ namespace TntMPDConverter
 			Assert.AreEqual(996, value["F. Mueller"].DonorNo);
 			Assert.AreEqual("Mueller, Franz", value["F. Mueller"].Donor);
 		}
+
 		///--------------------------------------------------------------------------------------
 		/// <summary>
 		/// Tests getting a normal donation
