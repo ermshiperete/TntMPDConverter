@@ -23,12 +23,8 @@ namespace TntMPDConverter
 						string[] textArray1 = line.Split(new[] { '\t' });
 						if (textArray1.Length != 6)
 						{
-							if (!textArray1[0].StartsWith("Projekt"))
-							{
-								Reader.UnreadLine(line);
-								IsValid = false;
+							if (IsEndOfDonation(line, textArray1[0]))
 								return donation;
-							}
 						}
 						else
 						{
@@ -38,6 +34,7 @@ namespace TntMPDConverter
 								donation.Amount = -donation.Amount;
 							}
 							donation.Donor = textArray1[5];
+							ApplyReplacements(donation);
 							return donation;
 						}
 					}

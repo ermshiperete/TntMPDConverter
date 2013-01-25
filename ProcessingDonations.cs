@@ -10,13 +10,17 @@ namespace TntMPDConverter
 {
 	public class ProcessingDonations : State
 	{
-		public class NewDonor
+		public class Replacement
 		{
-			public int DonorNo;
 			public string Donor;
 		}
 
-		protected static Dictionary<int, Dictionary<string, NewDonor>> ReplacementInfo
+		public class NewDonor: Replacement
+		{
+			public int DonorNo;
+		}
+
+		protected static Dictionary<int, Dictionary<string, Replacement>> ReplacementInfo
 		{
 			get;
 			set;
@@ -42,7 +46,7 @@ namespace TntMPDConverter
 
 		protected static void UpdateReplacementInfo()
 		{
-			ReplacementInfo = new Dictionary<int, Dictionary<string, NewDonor>>();
+			ReplacementInfo = new Dictionary<int, Dictionary<string, Replacement>>();
 			ReadReplacementFile();
 		}
 
@@ -51,6 +55,49 @@ namespace TntMPDConverter
 			string line = Reader.ReadLine();
 			Reader.UnreadLine(line);
 			return CheckForStartOfNewState(line) ?? new Ignore(Reader);
+		}
+
+		internal bool IsEndOfDonation(string line, string startOfLine)
+		{
+			if (!startOfLine.StartsWith("Projekt") && !startOfLine.StartsWith("\fProjekt"))
+			{
+				Reader.UnreadLine(line);
+				IsValid = false;
+				return true;
+			}
+			return false;
+		}
+
+		private Replacement GetReplacement(int key, string searchText)
+		{
+			return ReplacementInfo[key][searchText];
+		}
+
+		internal void ApplyReplacements(Donation donation)
+		{
+			if (ReplacementInfo.ContainsKey(donation.DonorNo))
+			{
+				foreach (var searchText in ReplacementInfo[donation.DonorNo].Keys)
+				{
+					if (donation.Donor.Contains(searchText))
+					{
+						var newDonor = GetReplacement(donation.DonorNo, searchText) as NewDonor;
+						donation.DonorNo = newDonor.DonorNo;
+						donation.Donor = newDonor.Donor;
+						break;
+					}
+				}
+			}
+			if (ReplacementInfo.ContainsKey(-1))
+			{
+				foreach (var searchText in ReplacementInfo[-1].Keys)
+				{
+					if (donation.Donor.Contains(searchText))
+					{
+						donation.Donor = GetReplacement(-1, searchText).Donor;
+					}
+				}
+			}
 		}
 
 		public virtual Donation NextDonation
@@ -67,12 +114,8 @@ namespace TntMPDConverter
 						string[] strings = line.Split(new[] { '\t' });
 						if (strings.Length != 7)
 						{
-							if (!strings[0].StartsWith("Projekt") && !strings[0].StartsWith("\fProjekt"))
-							{
-								Reader.UnreadLine(line);
-								IsValid = false;
+							if (IsEndOfDonation(line, strings[0]))
 								return donation;
-							}
 						}
 						else
 						{
@@ -84,19 +127,7 @@ namespace TntMPDConverter
 								donation.Amount = -donation.Amount;
 							}
 							donation.Donor = strings[6];
-							if (ReplacementInfo.ContainsKey(donation.DonorNo))
-							{
-								foreach (var key in ReplacementInfo[donation.DonorNo].Keys)
-								{
-									if (donation.Donor.Contains(key))
-									{
-										var newDonor = ReplacementInfo[donation.DonorNo][key];
-										donation.DonorNo = newDonor.DonorNo;
-										donation.Donor = newDonor.Donor;
-										break;
-									}
-								}
-							}
+							ApplyReplacements(donation);
 							return donation;
 						}
 					}
@@ -112,25 +143,39 @@ namespace TntMPDConverter
 
 			using (var reader = new StreamReader(ReplacementFileName))
 			{
-				Dictionary<string, NewDonor> newDonors = null;
+				int currentDonorNo = -1;
+				Dictionary<string, Replacement> replacements = null;
 				for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
 				{
-					if (line.StartsWith("["))
+					if (line == "[Replacements]")
 					{
-						newDonors = new Dictionary<string, NewDonor>();
-						ReplacementInfo.Add(Convert.ToInt32(line.Substring(1, line.Length - 2)), newDonors);
+						replacements = new Dictionary<string, Replacement>();
+						currentDonorNo = -1;
+						ReplacementInfo.Add(currentDonorNo, replacements);
 					}
-					else if (newDonors != null && line.Contains("="))
+					else if (line.StartsWith("["))
+					{
+						replacements = new Dictionary<string, Replacement>();
+						currentDonorNo = Convert.ToInt32(line.Substring(1, line.Length - 2));
+						ReplacementInfo.Add(currentDonorNo, replacements);
+					}
+					else if (replacements != null && line.Contains("="))
 					{
 						var parts = line.Split('=');
 						if (parts.Length != 2)
 							continue;
 						var donorInfo = parts[1].Split(';');
-						if (donorInfo.Length != 2)
+						if (donorInfo.Length != 2 && currentDonorNo != -1)
 							continue;
-						newDonors.Add(parts[0], new NewDonor {
-							DonorNo = Convert.ToInt32(donorInfo[0].Trim(' ')),
-							Donor = donorInfo[1].Trim(' ').Trim('"') });
+
+						if (currentDonorNo == -1)
+							replacements.Add(parts[0], new Replacement { Donor = parts[1] });
+						else
+						{
+							replacements.Add(parts[0], new NewDonor {
+								DonorNo = Convert.ToInt32(donorInfo[0].Trim(' ')),
+								Donor = donorInfo[1].Trim(' ').Trim('"') });
+						}
 					}
 				}
 			}

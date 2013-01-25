@@ -25,7 +25,7 @@ namespace TntMPDConverter
 
 			private static string OriginalReplacementFileName { get; set; }
 
-			internal static Dictionary<int, Dictionary<string, NewDonor>> GetReplacementInfo()
+			internal static Dictionary<int, Dictionary<string, Replacement>> GetReplacementInfo()
 			{
 				return ReplacementInfo;
 			}
@@ -65,6 +65,10 @@ namespace TntMPDConverter
 				writer.WriteLine("[999]");
 				writer.WriteLine("Markus Mustermann=997; \"Mustermann, Markus\"");
 				writer.WriteLine("F. Mueller=996; Mueller, Franz");
+				writer.WriteLine("Anton=995;Berta");
+				writer.WriteLine("[Replacements]");
+				writer.WriteLine("Umb. von Frieder Friederich=Friederich, Frieder");
+				writer.WriteLine("Berta=Caesar");
 			}
 		}
 
@@ -92,15 +96,22 @@ namespace TntMPDConverter
 		{
 			MyProcessingDonations.SetReplacementFileName(ReplacementFileName);
 			var info = MyProcessingDonations.GetReplacementInfo();
-			Assert.AreEqual(1, info.Count);
+			Assert.AreEqual(2, info.Count);
 			Assert.IsTrue(info.ContainsKey(999));
 			var value = info[999];
 			Assert.IsTrue(value.ContainsKey("Markus Mustermann"));
-			Assert.AreEqual(997, value["Markus Mustermann"].DonorNo);
-			Assert.AreEqual("Mustermann, Markus", value["Markus Mustermann"].Donor);
+			Assert.IsInstanceOf<ProcessingDonations.NewDonor>(value["Markus Mustermann"]);
+			var newDonor = value["Markus Mustermann"] as ProcessingDonations.NewDonor;
+			Assert.AreEqual(997, newDonor.DonorNo);
+			Assert.AreEqual("Mustermann, Markus", newDonor.Donor);
 			Assert.IsTrue(value.ContainsKey("F. Mueller"));
-			Assert.AreEqual(996, value["F. Mueller"].DonorNo);
-			Assert.AreEqual("Mueller, Franz", value["F. Mueller"].Donor);
+			Assert.IsInstanceOf<ProcessingDonations.NewDonor>(value["F. Mueller"]);
+			newDonor = value["F. Mueller"] as ProcessingDonations.NewDonor;
+			Assert.AreEqual(996, newDonor.DonorNo);
+			Assert.AreEqual("Mueller, Franz", newDonor.Donor);
+			value = info[-1];
+			Assert.IsTrue(value.ContainsKey("Berta"));
+			Assert.AreEqual("Caesar", value["Berta"].Donor);
 		}
 
 		///--------------------------------------------------------------------------------------
@@ -127,6 +138,18 @@ namespace TntMPDConverter
 			MyProcessingDonations.SetReplacementFileName(ReplacementFileName);
 			var donation = processingDonations.NextDonation;
 			AssertDonationEqual(new Donation(80, new DateTime(2010, 06, 01), "Mustermann, Markus", 997),
+				donation);
+		}
+
+		[Test]
+		public void DoubleReplaceAnonDonation()
+		{
+			var reader = new Scanner(null);
+			reader.UnreadLine("\t999\t01.06.2010\t80,00\tH\tKD\tungen. ueberw. durch Anton");
+			var processingDonations = new MyProcessingDonations(reader);
+			MyProcessingDonations.SetReplacementFileName(ReplacementFileName);
+			var donation = processingDonations.NextDonation;
+			AssertDonationEqual(new Donation(80, new DateTime(2010, 06, 01), "Caesar", 995),
 				donation);
 		}
 

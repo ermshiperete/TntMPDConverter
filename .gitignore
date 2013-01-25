@@ -2,9 +2,11 @@
 *.pidb
 *.userprefs
 *~
+*.swp
 test-results/
 bin/
-released/TntMPDConverter.exe
+obj/
+released/TntMPDConverter.*
 released/replace.config
 released/linux/
 released/windows/

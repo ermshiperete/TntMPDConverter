@@ -1,3 +1,6 @@
+2013-
+* Add account number 715 (member transfers)
+
 2012-09-19 Version 1.4.4
 * Fix problem when page break appeared in the middle of an address
 * Add account number 3239 (issue #7)
