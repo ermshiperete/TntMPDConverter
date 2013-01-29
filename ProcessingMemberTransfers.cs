@@ -41,7 +41,7 @@ namespace TntMPDConverter
 								donation.Amount = -donation.Amount;
 							}
 							donation.Donor = partsOfLine[5];
-							ApplyReplacements(donation);
+							Replacements.ApplyReplacements(donation);
 							return donation;
 						}
 					}

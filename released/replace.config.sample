@@ -17,14 +17,45 @@
 # Format:
 # [Spendernr]
 # Suchtext=Neue Spendernr; Ersetztext
-#
-# Die Ersetzungen im Abschnitt [Replacements] werden unabhaengig von der
-# Spendernummer vorgenommen, und zwar nach eventuellen spenderspezifischen
-# Ersetzungen.
 
 [999]
 Markus Mustermann=997; "Mustermann, Markus"
 F. Mueller=996; Mueller, Franz
 
+# Die Ersetzungen im Abschnitt [Replacements] werden unabhaengig von der
+# Spendernummer vorgenommen, und zwar nach eventuellen spenderspezifischen
+# Ersetzungen. Dabei wird nach dem Suchstring innerhalb der Beschreibung
+# gesucht. Wird er gefunden, wird die gesamte Beschreibung durch
+# Ersetzstring ersetzt.
+#
+# Format:
+# Suchstring=Ersetzstring
+
 [Replacements]
-Umb. von Frieder Friederich=Friederich, Frieder
+Umb. von Hugo Meier=Meier, Hugo
+
+# Der Abschnitt [Regex] funktioniert aehnlich wie die [Replacements] und werden
+# unabhaengig von der Spendernummer vorgenommen nach dem eventuelle
+# spenderspezifische Ersetzungen sowie die Ersetzungen des Abschnitts [Replacements]
+# vorgenommen wurden. Dabei wird nach dem regulaeren Ausdruck "Pattern" gesucht, und
+# die gefundene Zeichenkette durch "Replace" ersetzt.
+#
+# Fuer die regulaeren Ausdruecke wird die Funktionalitaet von .NET verwendet.
+# Siehe http://msdn.microsoft.com/en-us/library/az24scfc.aspx fuer eine
+# Beschreibung der Syntax.
+#
+# In den folgenden Beispiele gehen wir von dem Beschreibungstext
+# Umb. von Frieder Friederich
+# aus.
+
+[Regex]
+# Ersetze die komplette Beschreibung durch einen neuen String
+Pattern=^Umb\..+Friederich$
+Replace=Friederich, Frieder
+# Ersetze die komplette Beschreibung durch einen Teil des gefundenen Strings
+Pattern=^.+(Frieder Friederich)$
+Replace=$1
+# Ersetze alle "ie" durch "ei" (d.h. aus "Umb. von Frieder Friederich" wird
+# "Umb. von Freider Freiderich")
+Pattern=ie
+Replace=ei

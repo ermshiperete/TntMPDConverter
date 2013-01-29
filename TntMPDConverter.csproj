@@ -164,6 +164,7 @@
     <Compile Include="DonationManager.cs" />
     <Compile Include="Donor.cs" />
     <Compile Include="ProcessingMemberTransfers.cs" />
+    <Compile Include="ReplacementManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

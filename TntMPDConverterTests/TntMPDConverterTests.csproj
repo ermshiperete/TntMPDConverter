@@ -70,6 +70,8 @@
     <Compile Include="ProcessDonorsTests.cs" />
     <Compile Include="DonorTests.cs" />
     <Compile Include="ProcessingMemberTransfersTests.cs" />
+    <Compile Include="ReplacementManagerTests.cs" />
+    <Compile Include="AssertExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
