@@ -36,7 +36,9 @@ namespace TntMPDConverter
 				// new account numbers starting 1/2011
 				m_AccountNo == 1191 || m_AccountNo == 1197 || m_AccountNo == 1185 ||
 				// new account numbers starting 12/2011
-				m_AccountNo == 3220 || m_AccountNo == 3231 || m_AccountNo == 3239)
+				m_AccountNo == 3220 || m_AccountNo == 3231 || m_AccountNo == 3239 ||
+				// 3241 - Transfers from other organizations
+				m_AccountNo == 3241)
 			{
 				return new ProcessingDonations(Reader);
 			}
@@ -52,8 +54,7 @@ namespace TntMPDConverter
 				return new ProcessingMemberTransfers(m_AccountNo, Reader);
 			}
 			// 3224 - Transfers from other WOs
-			// 3241 - Transfers from other organizations
-			if (m_AccountNo == 3224 || m_AccountNo == 3241)
+			if (m_AccountNo == 3224)
 			{
 				return new ProcessingOtherTransfers(Reader);
 			}
