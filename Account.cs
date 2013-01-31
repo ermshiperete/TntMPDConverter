@@ -51,6 +51,12 @@ namespace TntMPDConverter
 			{
 				return new ProcessingMemberTransfers(m_AccountNo, Reader);
 			}
+			// 3224 - Transfers from other WOs
+			// 3241 - Transfers from other organizations
+			if (m_AccountNo == 3224 || m_AccountNo == 3241)
+			{
+				return new ProcessingOtherTransfers(Reader);
+			}
 			return new IgnoreAccount(Reader);
 		}
 

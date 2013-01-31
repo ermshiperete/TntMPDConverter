@@ -72,6 +72,7 @@
     <Compile Include="ProcessingMemberTransfersTests.cs" />
     <Compile Include="ReplacementManagerTests.cs" />
     <Compile Include="AssertExtensions.cs" />
+    <Compile Include="ProcessingOtherTransfersTests.cs" />
     <Compile Include="MyReplacementManager.cs" />
   </ItemGroup>
   <ItemGroup>
