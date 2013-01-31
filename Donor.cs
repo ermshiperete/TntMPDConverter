@@ -43,7 +43,7 @@ namespace TntMPDConverter
 		{
 		}
 
-		public Donor(int donorNo, string name, string street, string plz, string city,
+		public Donor(uint donorNo, string name, string street, string plz, string city,
 			string[] phoneNos, string email, int donationsCount, decimal amount)
 		{
 			DonorNo = donorNo;
@@ -57,7 +57,7 @@ namespace TntMPDConverter
 			Amount = amount;
 		}
 
-		public int DonorNo { get; private set; }
+		public uint DonorNo { get; private set; }
 		public string Name { get; private set; }
 		public string Street { get; private set; }
 		public string Plz { get; private set; }

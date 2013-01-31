@@ -49,7 +49,7 @@ namespace TntMPDConverter
 						}
 						else
 						{
-							donation = new Donation { DonorNo = Convert.ToInt32(strings[1]),
+							donation = new Donation { DonorNo = Convert.ToUInt32(strings[1]),
 								Date = Convert.ToDateTime(strings[2], info),
 								Amount = Convert.ToDecimal(strings[3], info) };
 							if (strings[4] == "S")

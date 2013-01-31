@@ -10,7 +10,7 @@ namespace TntMPDConverter
 {
 	internal class ConvertStatement
 	{
-		private Dictionary<int, Donation> m_Donations = new Dictionary<int, Donation>();
+		private Dictionary<uint, Donation> m_Donations = new Dictionary<uint, Donation>();
 
 		public void DoConversion()
 		{
@@ -22,8 +22,10 @@ namespace TntMPDConverter
 				donations = ProcessDonations(ref state);
 				donors = ProcessDonors(ref state);
 			}
-			string filename = Path.Combine(Settings.Default.TargetPath, Path.GetFileNameWithoutExtension(Settings.Default.SourceFile) + ".tntmpd");
-			using (var writer = new StreamWriter(File.Open(filename, FileMode.Create), Encoding.GetEncoding("Windows-1252")))
+			string filename = Path.Combine(Settings.Default.TargetPath,
+				Path.GetFileNameWithoutExtension(Settings.Default.SourceFile) + ".tntmpd");
+			using (var writer = new StreamWriter(File.Open(filename, FileMode.Create),
+				Encoding.GetEncoding("Windows-1252")))
 			{
 				writer.WriteLine("[ORGANIZATION]");
 				writer.WriteLine("Name=Wycliff e.V.");
@@ -49,7 +51,8 @@ namespace TntMPDConverter
 					// need to convert file from Windows-1252 to unicode because rtBox.LoadFile uses Encoding.Default
 					// which is UTF-8 on Linux.
 					tmpFile = Path.GetTempFileName();
-					File.WriteAllText(tmpFile, File.ReadAllText(rtfFileName, Encoding.GetEncoding("Windows-1252")));
+					File.WriteAllText(tmpFile, File.ReadAllText(rtfFileName,
+						Encoding.GetEncoding("Windows-1252")));
 				}
 				using (var rtBox = new RichTextBox())
 				{

@@ -34,13 +34,13 @@ namespace TntMPDConverter
 							{
 								Date = Convert.ToDateTime(partsOfLine[1], cultureInfo),
 								Amount = Convert.ToDecimal(partsOfLine[2], cultureInfo),
-								DonorNo = Convert.ToInt32(partsOfLine[4].Substring(3))
+								Donor = partsOfLine[5],
+								DonorNo = (uint)partsOfLine[5].GetHashCode()
 							};
 							if (partsOfLine[3] == "S")
 							{
 								donation.Amount = -donation.Amount;
 							}
-							donation.Donor = partsOfLine[5];
 							Replacements.ApplyReplacements(donation);
 							return donation;
 						}

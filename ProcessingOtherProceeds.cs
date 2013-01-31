@@ -28,7 +28,12 @@ namespace TntMPDConverter
 						}
 						else
 						{
-							donation = new Donation { DonorNo = 998, Date = Convert.ToDateTime(textArray1[1], cultureInfo), Amount = Convert.ToDecimal(textArray1[2], cultureInfo) };
+							donation = new Donation
+							{
+								DonorNo = 998,
+								Date = Convert.ToDateTime(textArray1[1], cultureInfo),
+								Amount = Convert.ToDecimal(textArray1[2], cultureInfo)
+							};
 							if (textArray1[3] == "S")
 							{
 								donation.Amount = -donation.Amount;

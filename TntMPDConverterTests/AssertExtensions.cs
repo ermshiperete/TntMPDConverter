@@ -7,7 +7,8 @@ namespace TntMPDConverter
 	{
 		public static void DonationEqual(Donation expected, Donation actual)
 		{
-			Assert.AreEqual(expected.DonorNo, actual.DonorNo);
+			if (expected.DonorNo != UInt32.MaxValue)
+				Assert.AreEqual(expected.DonorNo, actual.DonorNo);
 			Assert.AreEqual(expected.Donor, actual.Donor);
 			Assert.AreEqual(expected.Date, actual.Date);
 			Assert.AreEqual(expected.Amount, actual.Amount);

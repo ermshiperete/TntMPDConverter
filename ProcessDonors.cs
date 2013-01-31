@@ -52,7 +52,7 @@ namespace TntMPDConverter
 						cityLine = Reader.ReadLineFiltered();
 					var donorInfoMatch = donorInfo.Match(line);
 					var cityMatch = cityInfo.Match(cityLine);
-					var donorNo = Convert.ToInt32(donorInfoMatch.Groups["no"].Value);
+					var donorNo = Convert.ToUInt32(donorInfoMatch.Groups["no"].Value);
 					var count = Convert.ToInt32(donorInfoMatch.Groups["count"].Value);
 					var amount = Convert.ToDecimal(donorInfoMatch.Groups["eur"].Value, info);
 					var phoneNos = new List<string>();

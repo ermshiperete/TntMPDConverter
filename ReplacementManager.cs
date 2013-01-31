@@ -15,7 +15,7 @@ namespace TntMPDConverter
 
 		public class NewDonor: Replacement
 		{
-			public int DonorNo;
+			public uint DonorNo;
 		}
 
 		private const int Replacements = -1;
@@ -69,7 +69,7 @@ namespace TntMPDConverter
 				{
 					if (donation.Donor.Contains(searchText))
 					{
-						var newDonor = GetReplacement(donation.DonorNo, searchText) as NewDonor;
+						var newDonor = GetReplacement((int)donation.DonorNo, searchText) as NewDonor;
 						donation.DonorNo = newDonor.DonorNo;
 						donation.Donor = newDonor.Donor;
 						break;

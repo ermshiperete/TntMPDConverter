@@ -6,14 +6,14 @@ namespace TntMPDConverter
 	{
 		private class DonationInfo
 		{
-			public DonationInfo(DateTime date, int donationNo)
+			public DonationInfo(DateTime date, uint donationNo)
 			{
 				Date = date;
 				DonationNo = donationNo;
 			}
 
 			public DateTime Date { get; private set; }
-			public int DonationNo { get; private set; }
+			public uint DonationNo { get; private set; }
 
 			public override bool Equals(object obj)
 			{

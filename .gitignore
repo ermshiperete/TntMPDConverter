@@ -7,7 +7,9 @@ test-results/
 bin/
 obj/
 released/TntMPDConverter.*
+released/TntMpdConverter.*
 released/replace.config
 released/linux/
 released/windows/
 TntMPDConverter.wiki/
+latestVersion/

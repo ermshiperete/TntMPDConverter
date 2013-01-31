@@ -18,7 +18,7 @@ namespace TntMPDConverter
 		public Donation()
 		{
 		}
-		public Donation(decimal amount, DateTime date, string donor, int donorNo)
+		public Donation(decimal amount, DateTime date, string donor, uint donorNo)
 		{
 			Amount = amount;
 			Date = date;
@@ -29,7 +29,7 @@ namespace TntMPDConverter
 		public decimal Amount { get; set; }
 		public DateTime Date { get; set; }
 		public string Donor { get; set; }
-		public int DonorNo {get; set;}
+		public uint DonorNo {get; set;}
 
 		private int Id
 		{
@@ -47,7 +47,12 @@ namespace TntMPDConverter
 		{
 			get
 			{
-				return string.Format("{0}{1:d2}{2:d2}{3:d5}{4}", Date.Year, Date.Month, Date.Day, DonorNo, Id);
+				var s = string.Format("{0}{1:d2}{2:d2}{3:d5}{4}", Date.Year, Date.Month,
+					Date.Day, DonorNo, Id);
+				// Max length of booking id that TntMPD accepts is 18 characters
+				if (s.Length > 18)
+					s = s.Substring(0, 17) + Id.ToString();
+				return s;
 			}
 		}
 
