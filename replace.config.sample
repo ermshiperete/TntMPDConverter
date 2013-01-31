@@ -1,0 +1,83 @@
+# Beispieldatei - bitte in replace.config umbenennen
+#
+# Diese Datei erlaubt die Suche nach einer Zeichenkette innerhalb der Beschreibung.
+# Wird die Zeichenkette gefunden, dann wird die Beschreibung durch den neuen
+# Spendernamen ersetzt und die neue Spendernummer verwendet.
+#
+# Dies ist nützlich für regelmäßige Buchungen wie diese:
+# 999	01.06.2010	80,00	H	KD	ungen. ueberw. durch Markus Mustermann
+#
+# Mit der Anweisung:
+# [999]
+# Markus Mustermann=997; "Mustermann, Markus"
+#
+# taucht diese Buchung dann in der TntMPD-Datei so auf:
+# "997","Mustermann, Markus","6/1/2010","80.00","20100601009971","3333",""
+#
+# Format:
+# [Spendernr]
+# Suchtext=Neue Spendernr; Ersetztext
+
+[999]
+Markus Mustermann=997; "Mustermann, Markus"
+F. Mueller=996; Mueller, Franz
+
+# Die Ersetzungen im Abschnitt [Replacements] werden unabhaengig von der
+# Spendernummer vorgenommen, und zwar nach eventuellen spenderspezifischen
+# Ersetzungen. Dabei wird nach dem Suchstring innerhalb der Beschreibung
+# gesucht. Wird er gefunden, wird die gesamte Beschreibung durch
+# Ersetzstring ersetzt.
+#
+# Format:
+# Suchstring=Ersetzstring
+
+[Replacements]
+Umb. von Hugo Meier=Meier, Hugo
+
+# Der Abschnitt [Regex] funktioniert aehnlich wie die [Replacements] und werden
+# unabhaengig von der Spendernummer vorgenommen nach dem eventuelle
+# spenderspezifische Ersetzungen sowie die Ersetzungen des Abschnitts [Replacements]
+# vorgenommen wurden. Dabei wird nach dem regulaeren Ausdruck "Pattern" gesucht, und
+# die gefundene Zeichenkette durch "Replace" ersetzt.
+#
+# Fuer die regulaeren Ausdruecke wird die Funktionalitaet von .NET verwendet.
+# Siehe http://msdn.microsoft.com/en-us/library/az24scfc.aspx fuer eine
+# Beschreibung der Syntax.
+#
+# In den folgenden Beispiele gehen wir von dem Beschreibungstext
+# Umb. von Frieder Friederich
+# aus.
+
+[Regex]
+# Ersetze die komplette Beschreibung durch einen neuen String
+Pattern=^Umb\..+Friederich$
+Replace=Friederich, Frieder
+# Ersetze die komplette Beschreibung durch einen Teil des gefundenen Strings
+Pattern=^.+(Frieder Friederich)$
+Replace=$1
+# Ersetze alle "ie" durch "ei" (d.h. aus "Umb. von Frieder Friederich" wird
+# "Umb. von Freider Freiderich")
+Pattern=ie
+Replace=ei
+
+# Im Buchungskonto "715 Überleitungskonto/Umbuchungen" tauchen sowohl Spenden von anderen
+# Mitgliedern als auch diverse Belastungen auf. Buchungen werden nur konvertiert, wenn sie
+# von sie von einem der Include-Einträge erfasst werden. Ohne Eintrag im
+# Abschnitt [K715] werden keine Buchungen aus dem Konto 715 konvertiert. Nach Include=
+# kann eine Regular Expression oder einfach eine Zeichenkette angegeben werden.
+[K715]
+# Das folgende Muster trifft auf eine beliebige Beschreibung zu, d.h. alle Buchungen im
+# Konto 715 werden übernommen.
+Include=^.+$
+# Alle Buchungen, in denen die Zeichenkette "Frieder Friederich" auftaucht, werden übernommen.
+Include=Frieder Friederich
+
+# Die im Buchungskonto "3224 Weitergel. Spenden v.a. WO's" auftauchenden Spenden sollen unter
+# Umständen nicht konvertiert werden, wenn z.B. zusätzlich eine Abrechnung der anderen WO
+# eingelesen wird. In diesem Fall können Buchungen durch einen entsprechenden Exclude-Eintrag
+# ausgeschlossen werden. Nach Exclude= kann eine Regular Expression oder einfach eine
+# Zeichenkette angegeben werden.
+[K3224]
+# Buchungen im Abschnitt 3224, die die Beschreibung "BT-BANK TRANSFER" enthalten, werden
+# nicht konvertiert
+Exclude=BT-BANK TRANSFER
