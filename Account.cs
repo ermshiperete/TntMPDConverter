@@ -49,7 +49,7 @@ namespace TntMPDConverter
 			// Member transfer
 			if (m_AccountNo == 715)
 			{
-				return new ProcessingMemberTransfers(Reader);
+				return new ProcessingMemberTransfers(m_AccountNo, Reader);
 			}
 			return new IgnoreAccount(Reader);
 		}

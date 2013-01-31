@@ -9,66 +9,29 @@ namespace TntMPDConverter
 	[TestFixture]
 	public class ReplacementManagerTests
 	{
-		private class MyReplacementManager: ReplacementManager
-		{
-			public string OriginalReplacementFileName { get; private set;}
-			public MyReplacementManager(string fileName)
-			{
-				OriginalReplacementFileName = ReplacementFileName;
-				ReplacementFileName = fileName;
-			}
-
-			public string ReplacementFileNameForTests
-			{
-				get { return ReplacementFileName;}
-				set { ReplacementFileName = value; }
-			}
-
-			public Dictionary<int, Dictionary<string, Replacement>> GetReplacementInfo()
-			{
-				return ReplacementInfo;
-			}
-
-			public void ReReadReplacementFile()
-			{
-				UpdateReplacementInfo();
-			}
-		}
-
-		private MyReplacementManager ReplacementMgr;
-
-		private void CreateReplacementFile(string content)
-		{
-			using (var writer = new StreamWriter(ReplacementMgr.ReplacementFileNameForTests))
-			{
-				writer.WriteLine(content);
-			}
-			ReplacementMgr.ReReadReplacementFile();
-		}
-
 		[TestFixtureSetUp]
-		public void FixtureSetup()
+		public void FixtureSetUp()
 		{
-			ReplacementMgr = new MyReplacementManager(Path.GetTempFileName());
+			MyReplacementManager.Create();
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
-			File.Delete(ReplacementMgr.ReplacementFileNameForTests);
+			MyReplacementManager.Finish();
 		}
 
 		[Test]
 		public void ReplacementFile()
 		{
 			Assert.AreEqual(Path.Combine(Environment.CurrentDirectory, "replace.config"),
-				ReplacementMgr.OriginalReplacementFileName);
+				MyReplacementManager.OriginalReplacementFileName);
 		}
 
 		[Test]
 		public void ReplacementInfo()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 # Comment
 [999]
 Markus Mustermann=997; ""Mustermann, Markus""
@@ -79,9 +42,10 @@ Umb. von Frieder Friederich=Friederich, Frieder
 Berta=Caesar
 [Regex]
 Pattern=^Umb\..+Friederich$
-Replace=Friederich, Frieder");
-
-			var info = ReplacementMgr.GetReplacementInfo();
+Replace=Friederich, Frieder
+[K715]
+Include=^.+$");
+			var info = MyReplacementManager.Instance.GetReplacementInfo();
 			Assert.AreEqual(3, info.Count);
 			Assert.IsTrue(info.ContainsKey(999));
 			var value = info[999];
@@ -95,30 +59,40 @@ Replace=Friederich, Frieder");
 			newDonor = value["F. Mueller"] as ReplacementManager.NewDonor;
 			Assert.AreEqual(996, newDonor.DonorNo);
 			Assert.AreEqual("Mueller, Franz", newDonor.Donor);
+
+			// Replacements
 			Assert.IsTrue(info.ContainsKey(-1));
 			value = info[-1];
 			Assert.IsTrue(value.ContainsKey("Berta"));
 			Assert.AreEqual("Caesar", value["Berta"].Donor);
+
+			// Regex
 			Assert.IsTrue(info.ContainsKey(-2));
 			value = info[-2];
 			Assert.AreEqual(1, value.Count);
 			Assert.IsTrue(value.ContainsKey("^Umb\\..+Friederich$"));
 			Assert.AreEqual("Friederich, Frieder", value["^Umb\\..+Friederich$"].Donor);
+
+			// K715
+			var include = MyReplacementManager.Instance.GetIncludeInfo();
+			Assert.IsTrue(include.ContainsKey(715));
+			var includeList = include[715];
+			Assert.AreEqual(1, includeList.Count);
+			Assert.AreEqual("^.+$", includeList[0]);
 		}
 
 		[Test]
 		public void AccountSpecificReplacement()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 # Comment
 [999]
 Markus Mustermann=997; ""Mustermann, Markus""
 F. Mueller=996; Mueller, Franz
 Anton=995;Berta");
-
 			var donation = new Donation(80, new DateTime(2010, 06, 01),
 				"ungen. ueberw. durch Markus Mustermann", 999);
-			ReplacementMgr.ApplyReplacements(donation);
+			MyReplacementManager.Instance.ApplyReplacements(donation);
 
 			AssertEx.DonationEqual(new Donation(80, new DateTime(2010, 06, 01), "Mustermann, Markus", 997),
 				donation);
@@ -127,7 +101,7 @@ Anton=995;Berta");
 		[Test]
 		public void Replacements_AnonDonation()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 # Comment
 [999]
 Markus Mustermann=997; ""Mustermann, Markus""
@@ -136,10 +110,9 @@ Anton=995;Berta
 [Replacements]
 Umb. von Frieder Friederich=Friederich, Frieder
 Berta=Caesar");
-
 			var donation = new Donation(80, new DateTime(2010, 06, 01),
 				"ungen. ueberw. durch Anton", 999);
-			ReplacementMgr.ApplyReplacements(donation);
+			MyReplacementManager.Instance.ApplyReplacements(donation);
 
 			AssertEx.DonationEqual(new Donation(80, new DateTime(2010, 06, 01), "Caesar", 995),
 				donation);
@@ -148,13 +121,13 @@ Berta=Caesar");
 		[Test]
 		public void Regex_ReplaceEntireString()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 [Regex]
 Pattern=^Umb\..+Friederich$
 Replace=Friederich, Frieder");
 			var donation = new Donation(0, DateTime.Now, "Umb. von Frieder Friederich", 0);
 
-			ReplacementMgr.ApplyReplacements(donation);
+			MyReplacementManager.Instance.ApplyReplacements(donation);
 
 			Assert.AreEqual("Friederich, Frieder", donation.Donor);
 		}
@@ -162,13 +135,13 @@ Replace=Friederich, Frieder");
 		[Test]
 		public void Regex_UseSearchText()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 [Regex]
 Pattern=^.+(Frieder Friederich)$
 Replace=$1");
 			var donation = new Donation(0, DateTime.Now, "Umb. von Frieder Friederich", 0);
 
-			ReplacementMgr.ApplyReplacements(donation);
+			MyReplacementManager.Instance.ApplyReplacements(donation);
 
 			Assert.AreEqual("Frieder Friederich", donation.Donor);
 		}
@@ -176,13 +149,13 @@ Replace=$1");
 		[Test]
 		public void Regex_ComplexPattern()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 [Regex]
 Pattern=^.+(F[^ ]+) (F[a-z]+)$
 Replace=$2, $1");
 			var donation = new Donation(0, DateTime.Now, "Umb. von Frieder Friederich", 0);
 
-			ReplacementMgr.ApplyReplacements(donation);
+			MyReplacementManager.Instance.ApplyReplacements(donation);
 
 			Assert.AreEqual("Friederich, Frieder", donation.Donor);
 		}
@@ -190,13 +163,13 @@ Replace=$2, $1");
 		[Test]
 		public void Regex_ReplacePartOfString()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 [Regex]
 Pattern=ie
 Replace=ei");
 			var donation = new Donation(0, DateTime.Now, "Umb. von Frieder Friederich", 0);
 
-			ReplacementMgr.ApplyReplacements(donation);
+			MyReplacementManager.Instance.ApplyReplacements(donation);
 
 			Assert.AreEqual("Umb. von Freider Freiderich", donation.Donor);
 		}
@@ -204,7 +177,7 @@ Replace=ei");
 		[Test]
 		public void Regex_MultiplePatterns()
 		{
-			CreateReplacementFile(@"
+			MyReplacementManager.CreateReplacementFile(@"
 [Regex]
 Pattern=ie
 Replace=ei
@@ -216,9 +189,37 @@ Pattern=r
 Replace=x");
 			var donation = new Donation(0, DateTime.Now, "Umb. von Frieder Friederich", 0);
 
-			ReplacementMgr.ApplyReplacements(donation);
+			MyReplacementManager.Instance.ApplyReplacements(donation);
 
 			Assert.AreEqual("Fxeidex Fxeidexich", donation.Donor);
+		}
+
+		[Test]
+		public void K715_IncludeAll()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[K715]
+Include=^.+$");
+			Assert.IsTrue(MyReplacementManager.Instance.IncludeEntry(
+				715, "Umb. von Frieder Friederich"));
+		}
+
+		[Test]
+		public void K715_IncludeSome()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[K715]
+Include=Hugo");
+			Assert.IsFalse(MyReplacementManager.Instance.IncludeEntry(
+				715, "Umb. von Frieder Friederich"));
+		}
+
+		[Test]
+		public void K715_ExcludeAll()
+		{
+			MyReplacementManager.CreateReplacementFile("");
+			Assert.IsFalse(MyReplacementManager.Instance.IncludeEntry(
+				715, "Umb. von Frieder Friederich"));
 		}
 	}
 }

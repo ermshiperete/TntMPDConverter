@@ -35,6 +35,12 @@ namespace TntMPDConverter
 			set;
 		}
 
+		protected static Dictionary<int, List<string>> IncludeInfo
+		{
+			get;
+			set;
+		}
+
 		protected static string ReplacementFileName
 		{
 			get;
@@ -44,6 +50,7 @@ namespace TntMPDConverter
 		protected static void UpdateReplacementInfo()
 		{
 			ReplacementInfo = new Dictionary<int, Dictionary<string, Replacement>>();
+			IncludeInfo = new Dictionary<int, List<string>>();
 			ReadReplacementFile();
 		}
 
@@ -61,11 +68,24 @@ namespace TntMPDConverter
 			return text;
 		}
 
-		public void ApplyReplacements(Donation donation)
+		private bool ApplyRegexReplacements(int index, Donation donation)
 		{
-			if (ReplacementInfo.ContainsKey(donation.DonorNo))
+			if (ReplacementInfo.ContainsKey(index))
 			{
-				foreach (var searchText in ReplacementInfo[donation.DonorNo].Keys)
+				foreach (var pattern in ReplacementInfo[index].Keys)
+				{
+					donation.Donor = Regex.Replace(donation.Donor, pattern,
+						GetReplacement(index, pattern).Donor);
+				}
+			}
+			return !string.IsNullOrEmpty(donation.Donor);
+		}
+
+		private bool ApplyDonationReplacements(Donation donation)
+		{
+			if (ReplacementInfo.ContainsKey((int)donation.DonorNo))
+			{
+				foreach (var searchText in ReplacementInfo[(int)donation.DonorNo].Keys)
 				{
 					if (donation.Donor.Contains(searchText))
 					{
@@ -76,6 +96,11 @@ namespace TntMPDConverter
 					}
 				}
 			}
+			return !string.IsNullOrEmpty(donation.Donor);
+		}
+
+		private bool ApplyStringReplacements(Donation donation)
+		{
 			if (ReplacementInfo.ContainsKey(Replacements))
 			{
 				foreach (var searchText in ReplacementInfo[Replacements].Keys)
@@ -86,14 +111,31 @@ namespace TntMPDConverter
 					}
 				}
 			}
-			if (ReplacementInfo.ContainsKey(RegexReplacements))
+			return !string.IsNullOrEmpty(donation.Donor);
+		}
+
+		public void ApplyReplacements(Donation donation)
+		{
+			if (!ApplyDonationReplacements(donation))
+				return;
+
+			if (!ApplyStringReplacements(donation))
+				return;
+
+			ApplyRegexReplacements(RegexReplacements, donation);
+		}
+
+		public bool IncludeEntry(int accountNo, string entry)
+		{
+			if (!IncludeInfo.ContainsKey(accountNo))
+				return false;
+
+			foreach (var pattern in IncludeInfo[accountNo])
 			{
-				foreach (var pattern in ReplacementInfo[RegexReplacements].Keys)
-				{
-					donation.Donor = Regex.Replace(donation.Donor, pattern,
-						GetReplacement(RegexReplacements, pattern).Donor);
-				}
+				if (Regex.IsMatch(entry, pattern))
+					return true;
 			}
+			return false;
 		}
 
 		protected static void ReadReplacementFile()
@@ -105,58 +147,76 @@ namespace TntMPDConverter
 			{
 				int currentDonorNo = Replacements;
 				Dictionary<string, Replacement> replacements = null;
+				List<string> includes = null;
 				string lastPattern = string.Empty;
 				for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
 				{
 					if (line == "[Replacements]")
 					{
 						replacements = new Dictionary<string, Replacement>();
+						includes = null;
 						currentDonorNo = Replacements;
 						ReplacementInfo.Add(currentDonorNo, replacements);
 					}
 					else if (line == "[Regex]")
 					{
 						replacements = new Dictionary<string, Replacement>();
+						includes = null;
 						currentDonorNo = RegexReplacements;
 						ReplacementInfo.Add(currentDonorNo, replacements);
+					}
+					else if (line.StartsWith("[K"))
+					{
+						replacements = null;
+						includes = new List<string>();
+						currentDonorNo = Convert.ToInt32(line.Substring(2, line.Length - 3));
+						IncludeInfo.Add(currentDonorNo, includes);
 					}
 					else if (line.StartsWith("["))
 					{
 						replacements = new Dictionary<string, Replacement>();
+						includes = null;
 						currentDonorNo = Convert.ToInt32(line.Substring(1, line.Length - 2));
 						ReplacementInfo.Add(currentDonorNo, replacements);
 					}
-					else if (replacements != null && line.Contains("="))
+					else if (line.Contains("="))
 					{
 						var parts = line.Split('=');
 						if (parts.Length != 2)
 							continue;
-						if (currentDonorNo == RegexReplacements)
+						if (replacements != null)
 						{
-							if (parts[0] == "Pattern")
-								lastPattern = StripQuotes(parts[1]);
-							else if (parts[0] == "Replace" && !string.IsNullOrEmpty(lastPattern))
+							if (currentDonorNo == RegexReplacements)
 							{
-								replacements.Add(lastPattern, new Replacement { Donor = StripQuotes(parts[1]) });
-								lastPattern = string.Empty;
+								if (parts[0] == "Pattern")
+									lastPattern = StripQuotes(parts[1]);
+								else if (parts[0] == "Replace" && !string.IsNullOrEmpty(lastPattern))
+								{
+									replacements.Add(lastPattern, new Replacement { Donor = StripQuotes(parts[1]) });
+									lastPattern = string.Empty;
+								}
+								else
+									lastPattern = string.Empty;
 							}
 							else
-								lastPattern = string.Empty;
-						}
-						else
-						{
-							var donorInfo = parts[1].Split(';');
-							if (donorInfo.Length != 2 && currentDonorNo != -1)
-								continue;
+							{
+								var donorInfo = parts[1].Split(';');
+								if (donorInfo.Length != 2 && currentDonorNo != -1)
+									continue;
 
-							if (currentDonorNo == Replacements)
-								replacements.Add(parts[0], new Replacement { Donor = parts[1] });
-							else
-							{
-								replacements.Add(parts[0], new NewDonor {
-									DonorNo = Convert.ToInt32(donorInfo[0].Trim(' ')),
-									Donor = donorInfo[1].Trim(' ').Trim('"') });
+								if (currentDonorNo == Replacements)
+									replacements.Add(parts[0], new Replacement { Donor = parts[1] });
+								else
+								{
+									replacements.Add(parts[0], new NewDonor {
+										DonorNo = Convert.ToUInt32(donorInfo[0].Trim(' ')),
+										Donor = donorInfo[1].Trim(' ').Trim('"') });
+								}
 							}
+						}
+						else if (includes != null && parts[0] == "Include")
+						{
+							includes.Add(StripQuotes(parts[1]));
 						}
 					}
 				}

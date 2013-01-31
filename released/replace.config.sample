@@ -59,3 +59,14 @@ Replace=$1
 # "Umb. von Freider Freiderich")
 Pattern=ie
 Replace=ei
+
+# Im Buchungskonto "715 Überleitungskonto/Umbuchungen" tauchen sowohl Spenden von anderen
+# Mitgliedern als auch diverse Belastungen auf. Buchungen werden nur konvertiert, wenn sie
+# von sie von einem der Include-Einträge erfasst werden. Ohne Eintrag im
+# Abschnitt [K715] werden keine Buchungen aus dem Konto 715 konvertiert.
+[K715]
+# Das folgende Muster trifft auf eine beliebige Beschreibung zu, d.h. alle Buchungen im
+# Konto 715 werden übernommen.
+Include=^.+$
+# Alle Buchungen, in denen die Zeichenkette "Frieder Friederich" auftaucht, werden übernommen.
+Include=Frieder Friederich
