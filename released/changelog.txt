@@ -1,5 +1,9 @@
-2013-
-* Add account number 715 (member transfers)
+2013-01-31 Version 1.4.5
+* Add account number 715 (member transfers). Note that any desired entries need to be included
+  in replace.config. See replace.config.sample for instructions.
+* Add account number 3241
+* Add account number 3224 (transfer from other WOs) (issue #9). Entries can be excluded in
+  replace.config. Note that any donation amount in this category is the net amount.
 
 2012-09-19 Version 1.4.4
 * Fix problem when page break appeared in the middle of an address
