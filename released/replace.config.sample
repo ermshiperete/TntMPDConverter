@@ -63,10 +63,21 @@ Replace=ei
 # Im Buchungskonto "715 Überleitungskonto/Umbuchungen" tauchen sowohl Spenden von anderen
 # Mitgliedern als auch diverse Belastungen auf. Buchungen werden nur konvertiert, wenn sie
 # von sie von einem der Include-Einträge erfasst werden. Ohne Eintrag im
-# Abschnitt [K715] werden keine Buchungen aus dem Konto 715 konvertiert.
+# Abschnitt [K715] werden keine Buchungen aus dem Konto 715 konvertiert. Nach Include=
+# kann eine Regular Expression oder einfach eine Zeichenkette angegeben werden.
 [K715]
 # Das folgende Muster trifft auf eine beliebige Beschreibung zu, d.h. alle Buchungen im
 # Konto 715 werden übernommen.
 Include=^.+$
 # Alle Buchungen, in denen die Zeichenkette "Frieder Friederich" auftaucht, werden übernommen.
 Include=Frieder Friederich
+
+# Die im Buchungskonto "3224 Weitergel. Spenden v.a. WO's" auftauchenden Spenden sollen unter
+# Umständen nicht konvertiert werden, wenn z.B. zusätzlich eine Abrechnung der anderen WO
+# eingelesen wird. In diesem Fall können Buchungen durch einen entsprechenden Exclude-Eintrag
+# ausgeschlossen werden. Nach Exclude= kann eine Regular Expression oder einfach eine
+# Zeichenkette angegeben werden.
+[K3224]
+# Buchungen im Abschnitt 3224, die die Beschreibung "BT-BANK TRANSFER" enthalten, werden
+# nicht konvertiert
+Exclude=BT-BANK TRANSFER

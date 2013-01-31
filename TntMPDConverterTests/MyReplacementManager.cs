@@ -54,6 +54,11 @@ namespace TntMPDConverter
 			return IncludeInfo;
 		}
 
+		public Dictionary<int, List<string>> GetExcludeInfo()
+		{
+			return ExcludeInfo;
+		}
+
 		public void ReReadReplacementFile()
 		{
 			UpdateReplacementInfo();

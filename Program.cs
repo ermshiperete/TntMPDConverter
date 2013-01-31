@@ -32,7 +32,7 @@ namespace TntMPDConverter
 				var newArgs = new string[args.Length + 1];
 				newArgs[0] = "--nested";
 				Array.Copy(args, 0, newArgs, 1, args.Length);
-				domain.ExecuteAssembly("TntMPDConverter.exe", newArgs);
+				domain.ExecuteAssembly("TntMPDConverter.exe", null, newArgs);
 			}
 			else
 			{

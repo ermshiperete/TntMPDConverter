@@ -44,7 +44,9 @@ Berta=Caesar
 Pattern=^Umb\..+Friederich$
 Replace=Friederich, Frieder
 [K715]
-Include=^.+$");
+Include=^.+$
+[K3224]
+Exclude=Hugo");
 			var info = MyReplacementManager.Instance.GetReplacementInfo();
 			Assert.AreEqual(3, info.Count);
 			Assert.IsTrue(info.ContainsKey(999));
@@ -79,6 +81,13 @@ Include=^.+$");
 			var includeList = include[715];
 			Assert.AreEqual(1, includeList.Count);
 			Assert.AreEqual("^.+$", includeList[0]);
+
+			// K3224
+			var exclude = MyReplacementManager.Instance.GetExcludeInfo();
+			Assert.IsTrue(exclude.ContainsKey(3224));
+			var excludeList = exclude[3224];
+			Assert.AreEqual(1, excludeList.Count);
+			Assert.AreEqual("Hugo", excludeList[0]);
 		}
 
 		[Test]
@@ -220,6 +229,34 @@ Include=Hugo");
 			MyReplacementManager.CreateReplacementFile("");
 			Assert.IsFalse(MyReplacementManager.Instance.IncludeEntry(
 				715, "Umb. von Frieder Friederich"));
+		}
+
+		[Test]
+		public void K3224_IncludeAll()
+		{
+			MyReplacementManager.CreateReplacementFile("");
+			Assert.IsFalse(MyReplacementManager.Instance.ExcludeEntry(
+				3224, "Umb. von Frieder Friederich"));
+		}
+
+		[Test]
+		public void K3224_IncludeSome()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[K3224]
+Exclude=Hugo");
+			Assert.IsFalse(MyReplacementManager.Instance.ExcludeEntry(
+				3224, "Umb. von Frieder Friederich"));
+		}
+
+		[Test]
+		public void K3224_ExcludeAll()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[K3224]
+Exclude=^.+$");
+			Assert.IsTrue(MyReplacementManager.Instance.ExcludeEntry(
+				3224, "Umb. von Frieder Friederich"));
 		}
 	}
 }

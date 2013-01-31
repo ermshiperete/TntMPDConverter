@@ -41,6 +41,8 @@ namespace TntMPDConverter
 			set;
 		}
 
+		protected static Dictionary<int, List<string>> ExcludeInfo { get; set; }
+
 		protected static string ReplacementFileName
 		{
 			get;
@@ -51,6 +53,7 @@ namespace TntMPDConverter
 		{
 			ReplacementInfo = new Dictionary<int, Dictionary<string, Replacement>>();
 			IncludeInfo = new Dictionary<int, List<string>>();
+			ExcludeInfo = new Dictionary<int, List<string>>();
 			ReadReplacementFile();
 		}
 
@@ -125,17 +128,27 @@ namespace TntMPDConverter
 			ApplyRegexReplacements(RegexReplacements, donation);
 		}
 
-		public bool IncludeEntry(int accountNo, string entry)
+		private bool IncludeExcludeEntry(int accountNo, string entry, Dictionary<int, List<string>> info)
 		{
-			if (!IncludeInfo.ContainsKey(accountNo))
+			if (!info.ContainsKey(accountNo))
 				return false;
 
-			foreach (var pattern in IncludeInfo[accountNo])
+			foreach (var pattern in info[accountNo])
 			{
 				if (Regex.IsMatch(entry, pattern))
 					return true;
 			}
 			return false;
+		}
+
+		public bool IncludeEntry(int accountNo, string entry)
+		{
+			return IncludeExcludeEntry(accountNo, entry, IncludeInfo);
+		}
+
+		public bool ExcludeEntry(int accountNo, string entry)
+		{
+			return IncludeExcludeEntry(accountNo, entry, ExcludeInfo);
 		}
 
 		protected static void ReadReplacementFile()
@@ -147,35 +160,45 @@ namespace TntMPDConverter
 			{
 				int currentDonorNo = Replacements;
 				Dictionary<string, Replacement> replacements = null;
-				List<string> includes = null;
+				List<string> includesExcludes = null;
+				bool processingIncludes = false;
 				string lastPattern = string.Empty;
 				for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
 				{
 					if (line == "[Replacements]")
 					{
 						replacements = new Dictionary<string, Replacement>();
-						includes = null;
+						includesExcludes = null;
 						currentDonorNo = Replacements;
 						ReplacementInfo.Add(currentDonorNo, replacements);
 					}
 					else if (line == "[Regex]")
 					{
 						replacements = new Dictionary<string, Replacement>();
-						includes = null;
+						includesExcludes = null;
 						currentDonorNo = RegexReplacements;
 						ReplacementInfo.Add(currentDonorNo, replacements);
 					}
 					else if (line.StartsWith("[K"))
 					{
 						replacements = null;
-						includes = new List<string>();
+						includesExcludes = new List<string>();
 						currentDonorNo = Convert.ToInt32(line.Substring(2, line.Length - 3));
-						IncludeInfo.Add(currentDonorNo, includes);
+						if (currentDonorNo == 715)
+						{
+							IncludeInfo.Add(currentDonorNo, includesExcludes);
+							processingIncludes = true;
+						}
+						else
+						{
+							ExcludeInfo.Add(currentDonorNo, includesExcludes);
+							processingIncludes = false;
+						}
 					}
 					else if (line.StartsWith("["))
 					{
 						replacements = new Dictionary<string, Replacement>();
-						includes = null;
+						includesExcludes = null;
 						currentDonorNo = Convert.ToInt32(line.Substring(1, line.Length - 2));
 						ReplacementInfo.Add(currentDonorNo, replacements);
 					}
@@ -214,9 +237,10 @@ namespace TntMPDConverter
 								}
 							}
 						}
-						else if (includes != null && parts[0] == "Include")
+						else if (includesExcludes != null && ((parts[0] == "Include" && processingIncludes) ||
+							(parts[0] == "Exclude" && !processingIncludes)))
 						{
-							includes.Add(StripQuotes(parts[1]));
+							includesExcludes.Add(StripQuotes(parts[1]));
 						}
 					}
 				}

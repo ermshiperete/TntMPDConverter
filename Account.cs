@@ -56,7 +56,7 @@ namespace TntMPDConverter
 			// 3224 - Transfers from other WOs
 			if (m_AccountNo == 3224)
 			{
-				return new ProcessingOtherTransfers(Reader);
+				return new ProcessingOtherTransfers(m_AccountNo, Reader);
 			}
 			return new IgnoreAccount(Reader);
 		}

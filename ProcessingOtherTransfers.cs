@@ -8,8 +8,11 @@ namespace TntMPDConverter
 	/// </summary>
 	public class ProcessingOtherTransfers: ProcessingDonations
 	{
-		public ProcessingOtherTransfers(Scanner reader): base(reader)
+		private int m_AccountNo;
+
+		public ProcessingOtherTransfers(int accountNo, Scanner reader): base(reader)
 		{
+			m_AccountNo = accountNo;
 		}
 
 		public override Donation NextDonation
@@ -29,7 +32,7 @@ namespace TntMPDConverter
 							if (IsEndOfDonation(line, partsOfLine[0]))
 								return donation;
 						}
-						else
+						else if (!Replacements.ExcludeEntry(m_AccountNo, partsOfLine[7]))
 						{
 							// 23.11.2012	US$	209,64	162,20	H	8021	SWZ Member gift
 							// [1]          [2] [3]     [4]    [5]  [6]     [7]
