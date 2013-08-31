@@ -1,3 +1,6 @@
+2013-08-31 Version 1.4.6
+* Put foreign currency in memo field instead of motivation (issue #12).
+
 2013-01-31 Version 1.4.5
 * Add account number 715 (member transfers). Note that any desired entries need to be included
   in replace.config. See replace.config.sample for instructions.

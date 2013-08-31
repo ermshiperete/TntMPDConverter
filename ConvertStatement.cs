@@ -78,7 +78,7 @@ namespace TntMPDConverter
 			}
 			var builder = new StringBuilder();
 			builder.AppendLine("[GIFTS]");
-			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\"");
+			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\",\"MEMO\"");
 			var cultureInfo = new CultureInfo("en-US", false);
 			while (state != null)
 			{
@@ -91,7 +91,7 @@ namespace TntMPDConverter
 						var donation = processingDonations.NextDonation;
 						if (donation != null)
 						{
-							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"", 
+							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\",\"{6}\"", 
 								donation.DonorNo, donation.Donor,
 								donation.Date.ToString("d", cultureInfo),
 								donation.Amount.ToString(cultureInfo),
