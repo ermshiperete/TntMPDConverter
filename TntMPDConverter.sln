@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TntMPDConverter", "TntMPDConverter.csproj", "{04D1C312-DF0A-4D76-8E6D-4015FBDBD936}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TntMPDConverterTests", "TntMPDConverterTests\TntMPDConverterTests.csproj", "{235BDC35-59B8-4FFB-9F16-12638DABA5FE}"
@@ -12,16 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		released\replace.config.sample = released\replace.config.sample
 		released\linux.config = released\linux.config
 		released\windows.config = released\windows.config
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "linux", "linux", "{4A832653-727D-4E06-B85E-DBCC04F1B2A0}"
-	ProjectSection(SolutionItems) = preProject
-		Libs\linux\SilUtils.dll = Libs\linux\SilUtils.dll
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "windows", "windows", "{5DDB7A5F-3924-4A9F-BA7A-7B835C5434DA}"
-	ProjectSection(SolutionItems) = preProject
-		Libs\windows\SilUtils.dll = Libs\windows\SilUtils.dll
 	EndProjectSection
 EndProject
 Global
@@ -40,8 +30,6 @@ Global
 		{235BDC35-59B8-4FFB-9F16-12638DABA5FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4A832653-727D-4E06-B85E-DBCC04F1B2A0} = {80D5CD32-17EC-462E-BFD6-3AE011D169BF}
-		{5DDB7A5F-3924-4A9F-BA7A-7B835C5434DA} = {80D5CD32-17EC-462E-BFD6-3AE011D169BF}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = TntMPDConverter.csproj
