@@ -10,7 +10,7 @@ namespace TntMPDConverter
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			ToolkitType tkType = ToolkitType.Wpf;
+			var tkType = ToolkitType.Wpf;
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 				tkType = ToolkitType.Gtk;
 			Application.Initialize(tkType);

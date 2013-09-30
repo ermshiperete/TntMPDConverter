@@ -15,7 +15,6 @@ namespace TntMPDConverter
 		public ConvertDialog()
 		{
 			this.Width = 500;
-			this.Height = 300;
 			this.Title = "TntMPD Converter";
 			var vbox = new VBox();
 			vbox.PackStart(new Label("Projektabrechnung"));
@@ -75,6 +74,7 @@ namespace TntMPDConverter
 		{
 			using (var folderBrowserDialog = new SelectFolderDialog("Zielverzeichnis ausw\u00e4hlen"))
 			{
+				folderBrowserDialog.CanCreateFolders = true;
 				folderBrowserDialog.CurrentFolder = m_TargetDir.Text.Length > 0 && m_SourceFile.Text.Length > 0 ? Path.GetDirectoryName(m_SourceFile.Text) : m_TargetDir.Text.Length > 0 ? m_TargetDir.Text : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				if (folderBrowserDialog.Run())
 				{
