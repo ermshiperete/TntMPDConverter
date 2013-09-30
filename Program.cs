@@ -37,19 +37,18 @@ namespace TntMPDConverter
 
 			using (var dlg = new ConvertDialog())
 			{
-				dlg.Show();
 				dlg.Run();
 			}
 		}
 
 		private static void Upgrade()
 		{
-			if (!Settings.Default.UpgradeDone)
-			{
-				Settings.Default.Upgrade();
-				Settings.Default.UpgradeDone = true;
-				Settings.Default.Save();
-			}
+			if (Settings.Default.UpgradeDone)
+				return;
+
+			Settings.Default.Upgrade();
+			Settings.Default.UpgradeDone = true;
+			Settings.Default.Save();
 		}
 	}
 }

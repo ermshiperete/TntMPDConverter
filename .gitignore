@@ -3,6 +3,8 @@
 *.userprefs
 *~
 *.swp
+*.suo
+*.user
 test-results/
 bin/
 obj/
