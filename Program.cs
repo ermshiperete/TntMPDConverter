@@ -14,30 +14,37 @@ namespace TntMPDConverter
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 				tkType = ToolkitType.Gtk;
 			Application.Initialize(tkType);
-			Upgrade();
-
-			if (args.Length == 2)
+			try
 			{
-				if (!File.Exists(args[0]))
+				Upgrade();
+
+				if (args.Length == 2)
 				{
-					Console.WriteLine("Source file {0} doesn't exist.", args[0]);
+					if (!File.Exists(args[0]))
+					{
+						Console.WriteLine("Source file {0} doesn't exist.", args[0]);
+						return;
+					}
+					if (!Directory.Exists(args[1]))
+					{
+						Console.WriteLine("Target directory {0} doesn't exist.", args[1]);
+						return;
+					}
+					Settings.Default.SourceFile = args[0];
+					Settings.Default.TargetPath = args[1];
+					new ConvertStatement().DoConversion();
+					Settings.Default.Save();
 					return;
 				}
-				if (!Directory.Exists(args[1]))
+
+				using (var dlg = new ConvertDialog())
 				{
-					Console.WriteLine("Target directory {0} doesn't exist.", args[1]);
-					return;
+					dlg.Run();
 				}
-				Settings.Default.SourceFile = args[0];
-				Settings.Default.TargetPath = args[1];
-				new ConvertStatement().DoConversion();
-				Settings.Default.Save();
-				return;
 			}
-
-			using (var dlg = new ConvertDialog())
+			finally
 			{
-				dlg.Run();
+				Application.Dispose();
 			}
 		}
 
