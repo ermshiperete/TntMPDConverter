@@ -1,9 +1,10 @@
+// Copyright (c) 2013, Eberhard Beilharz.
+// Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using TntMPDConverter.Properties;
 
 namespace TntMPDConverter
@@ -43,28 +44,8 @@ namespace TntMPDConverter
 
 		private static string ConvertToText(string rtfFileName)
 		{
-			var tmpFile = rtfFileName;
-			try
-			{
-				if (IsUnix)
-				{
-					// need to convert file from Windows-1252 to unicode because rtBox.LoadFile uses Encoding.Default
-					// which is UTF-8 on Linux.
-					tmpFile = Path.GetTempFileName();
-					File.WriteAllText(tmpFile, File.ReadAllText(rtfFileName,
-						Encoding.GetEncoding("Windows-1252")));
-				}
-				using (var rtBox = new RichTextBox())
-				{
-					rtBox.LoadFile(tmpFile, RichTextBoxStreamType.RichText);
-					return rtBox.Text;
-				}
-			}
-			finally
-			{
-				if (tmpFile != rtfFileName)
-					File.Delete(tmpFile);
-			}
+			var rtfConverter = new RtfConverter(rtfFileName);
+			return rtfConverter.Text;
 		}
 
 		private string ProcessDonations(ref State state)
