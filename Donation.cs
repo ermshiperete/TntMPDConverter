@@ -31,11 +31,20 @@ namespace TntMPDConverter
 			Remarks = remarks;
 		}
 
+		public Donation(decimal amount, DateTime date, string donor, uint donorNo, string remarks,
+			decimal tenderedAmount, string tenderedCurrency): this(amount, date, donor, donorNo, remarks)
+		{
+			TenderedAmount = tenderedAmount;
+			TenderedCurrency = tenderedCurrency;
+		}
+
 		public decimal Amount { get; set; }
 		public DateTime Date { get; set; }
 		public string Donor { get; set; }
 		public uint DonorNo {get; set;}
 		public string Remarks { get; set; }
+		public decimal TenderedAmount { get; set; }
+		public string TenderedCurrency { get; set; }
 
 		private int Id
 		{

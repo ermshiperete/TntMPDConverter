@@ -59,7 +59,7 @@ namespace TntMPDConverter
 			}
 			var builder = new StringBuilder();
 			builder.AppendLine("[GIFTS]");
-			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\",\"MEMO\"");
+			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\",\"MEMO\",\"TENDERED_AMOUNT\",\"TENDERED_CURRENCY\"");
 			var cultureInfo = new CultureInfo("en-US", false);
 			while (state != null)
 			{
@@ -72,12 +72,14 @@ namespace TntMPDConverter
 						var donation = processingDonations.NextDonation;
 						if (donation != null)
 						{
-							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\",\"{6}\"", 
+							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\",\"{6}\",\"{7}\",\"{8}\"",
 								donation.DonorNo, donation.Donor,
 								donation.Date.ToString("d", cultureInfo),
 								donation.Amount.ToString(cultureInfo),
 								donation.BookingId, projectNo,
-								donation.Remarks));
+								donation.Remarks,
+								string.IsNullOrEmpty(donation.TenderedCurrency) ? string.Empty : donation.TenderedAmount.ToString(),
+								donation.TenderedCurrency));
 							// we use m_Donations to track donations without donor address,
 							// so it doesn't matter if we override one if one donor has made
 							// multiple donations.

@@ -44,7 +44,9 @@ namespace TntMPDConverter
 								Amount = Convert.ToDecimal(partsOfLine[4], cultureInfo),
 								Donor = partsOfLine[7],
 								Remarks = string.Format("Netto; {0} {1}", partsOfLine[2],
-									partsOfLine[3])
+									partsOfLine[3]),
+								TenderedAmount = Convert.ToDecimal(partsOfLine[3], cultureInfo),
+								TenderedCurrency = partsOfLine[2] == "US$" ? "USD" : partsOfLine[2]
 							};
 							if (partsOfLine[5] == "S")
 							{

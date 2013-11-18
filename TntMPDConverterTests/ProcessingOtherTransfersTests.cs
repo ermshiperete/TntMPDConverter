@@ -13,7 +13,7 @@ namespace TntMPDConverter
 	23.11.2012	US$	209,64	162,20	H	8021	SWZ Member gift");
 			var processingDonations = new ProcessingOtherTransfers(3224, reader);
 			AssertEx.DonationEqual(new Donation(162.20m, new DateTime(2012, 11, 23),
-				"SWZ Member gift", UInt32.MaxValue, "Netto; US$ 209,64"), processingDonations.NextDonation);
+				"SWZ Member gift", UInt32.MaxValue, "Netto; US$ 209,64", 209.64m, "USD"), processingDonations.NextDonation);
 		}
 
 		[Test]
@@ -40,7 +40,7 @@ namespace TntMPDConverter
 							OPP_TransAmount=-209,64");
 			var processingDonations = new ProcessingOtherTransfers(3224, reader);
 			AssertEx.DonationEqual(new Donation(162.20m, new DateTime(2012, 11, 23),
-				"437921 BT-BANK TRANSFER", UInt32.MaxValue, "Netto; US$ 209,64"),
+				"437921 BT-BANK TRANSFER", UInt32.MaxValue, "Netto; US$ 209,64", 209.64m, "USD"),
 				processingDonations.NextDonation);
 		}
 

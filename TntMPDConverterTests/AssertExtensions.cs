@@ -13,6 +13,8 @@ namespace TntMPDConverter
 			Assert.AreEqual(expected.Date, actual.Date);
 			Assert.AreEqual(expected.Amount, actual.Amount);
 			Assert.AreEqual(expected.Remarks, actual.Remarks);
+			Assert.AreEqual(expected.TenderedAmount, actual.TenderedAmount);
+			Assert.AreEqual(expected.TenderedCurrency, actual.TenderedCurrency);
 		}
 
 	}
