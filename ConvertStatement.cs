@@ -103,7 +103,7 @@ namespace TntMPDConverter
 				"\"SP_LAST_NAME\",\"SP_FIRST_NAME\",\"SP_MIDDLE_NAME\",\"SP_TITLE\",\"SP_SUFFIX\"," + 
 				"\"ADDR1\",\"ADDR2\",\"ADDR3\",\"ADDR4\",\"CITY\"," + 
 				"\"STATE\",\"ZIP\",\"COUNTRY\",\"CNTRY_DESCR\",\"ADDR_CHANGED\"," + 
-				"\"PHONE\",\"PHONE_CHANGED\"");
+				"\"PHONE\",\"PHONE_CHANGED\",\"EMAIL\"");
 			while (state != null)
 			{
 				var processDonors = state as ProcessDonors;
@@ -120,12 +120,12 @@ namespace TntMPDConverter
 							// Address
 							"\"{10}\",,,,\"{11}\",,\"{12}\",\"DE\",\"Germany\",," +
 							// Phone
-							"\"{13}\",\" \"",
+							"\"{13}\",\" \",\"{14}\"",
 							donor.DonorNo, donor.Name, donor.PersonType,
 							donor.LastName, donor.ContactPerson, donor.FirstName, donor.Title,
 							donor.SpouseLastName, donor.SpouseFirstName, donor.SpouseTitle,
 							donor.Street, donor.City, donor.Plz,
-							donor.CombinedPhoneNo);
+							donor.CombinedPhoneNo, donor.Email);
 						builder.AppendLine();
 						m_Donations.Remove(donor.DonorNo);
 					}
