@@ -32,7 +32,9 @@ namespace TntMPDConverter
 							if (IsEndOfDonation(line, partsOfLine[0]))
 								return donation;
 						}
-						else if (!Replacements.ExcludeEntry(m_AccountNo, partsOfLine[7]))
+						else if (!Replacements.ExcludeEntry(m_AccountNo, partsOfLine[7]) &&
+							!string.IsNullOrEmpty(partsOfLine[1]) &&
+							!string.IsNullOrEmpty(partsOfLine[4]))
 						{
 							// 23.11.2012	US$	209,64	162,20	H	8021	SWZ Member gift
 							// [1]          [2] [3]     [4]    [5]  [6]     [7]

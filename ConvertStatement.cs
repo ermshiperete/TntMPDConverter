@@ -99,7 +99,7 @@ namespace TntMPDConverter
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("[DONORS]");
 			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"PERSON_TYPE\"," + 
-				"\"LAST_NAME_ORG\",\"FIRST_NAME\",\"MIDDLE_NAME\",\"TITLE\",\"SUFFIX\"," + 
+				"\"LAST_NAME_ORG\",\"ORG_CONTACT_PERSON\",\"FIRST_NAME\",\"MIDDLE_NAME\",\"TITLE\",\"SUFFIX\"," + 
 				"\"SP_LAST_NAME\",\"SP_FIRST_NAME\",\"SP_MIDDLE_NAME\",\"SP_TITLE\",\"SP_SUFFIX\"," + 
 				"\"ADDR1\",\"ADDR2\",\"ADDR3\",\"ADDR4\",\"CITY\"," + 
 				"\"STATE\",\"ZIP\",\"COUNTRY\",\"CNTRY_DESCR\",\"ADDR_CHANGED\"," + 
@@ -112,19 +112,19 @@ namespace TntMPDConverter
 					var donor = processDonors.NextDonor;
 					if (donor != null)
 					{
-						builder.AppendFormat("\"{0}\",\"{1}\",\"{2}\"," + 
+						builder.AppendFormat("\"{0}\",\"{1}\",\"{2}\"," +
 							// Person
-							"\"{3}\",\"{4}\",,\"{5}\",," + 
+							"\"{3}\",\"{4}\",\"{5}\",,\"{6}\",," +
 							// Spouse
-							"\"{6}\",\"{7}\",,\"{8}\",," + 
+							"\"{7}\",\"{8}\",,\"{9}\",," +
 							// Address
-							"\"{9}\",,,,\"{10}\",,\"{11}\",\"DE\",\"Germany\",," + 
+							"\"{10}\",,,,\"{11}\",,\"{12}\",\"DE\",\"Germany\",," +
 							// Phone
-							"\"{12}\",\" \"", 
-							donor.DonorNo, donor.Name, donor.PersonType, 
-							donor.LastName, donor.FirstName, donor.Title, 
+							"\"{13}\",\" \"",
+							donor.DonorNo, donor.Name, donor.PersonType,
+							donor.LastName, donor.ContactPerson, donor.FirstName, donor.Title,
 							donor.SpouseLastName, donor.SpouseFirstName, donor.SpouseTitle,
-							donor.Street, donor.City, donor.Plz, 
+							donor.Street, donor.City, donor.Plz,
 							donor.CombinedPhoneNo);
 						builder.AppendLine();
 						m_Donations.Remove(donor.DonorNo);
