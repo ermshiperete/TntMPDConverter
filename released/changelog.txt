@@ -1,4 +1,7 @@
-2013-11-20 version 1.4.7
+2013-11-xx version 1.4.8
+* Fix/improve multiline handling
+
+2013-11-19 version 1.4.7
 * Improve handling of multiline records
 * Support multiline organizations (issue #4)
 * Convert donor email address (issue #10)

@@ -1,6 +1,6 @@
+// Copyright (c) 2013, Eberhard Beilharz.
+// Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
 using System;
-using System.Collections.Generic;
-using System.IO;
 using NUnit.Framework;
 using TntMPDConverter;
 
@@ -33,6 +33,20 @@ Include=^.+$");
 			AssertEx.DonationEqual(new Donation(100.00m, new DateTime(2012, 10, 30),
 				"Frieder Friederich", UInt32.MaxValue),
 				processingDonations.NextDonation);
+		}
+
+		[Test]
+		public void MultiLine()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[K715]
+Include=^.+$");
+			var reader = new FakeScanner(@"
+	01.06.2010	80,00	H	UM 867	Mustermann, Markus
+					Continued");
+			var donation = new ProcessingMemberTransfers(715, reader).NextDonation;
+			AssertEx.DonationEqual(new Donation(80, new DateTime(2010, 06, 01),
+				"Mustermann, Markus Continued", UInt32.MaxValue), donation);
 		}
 	}
 }

@@ -1,6 +1,6 @@
+// Copyright (c) 2013, Eberhard Beilharz.
+// Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
 using System;
-using System.Collections.Generic;
-using System.IO;
 using NUnit.Framework;
 using TntMPDConverter;
 
@@ -22,8 +22,8 @@ namespace TntMPDConverter
 		[Test]
 		public void NormalDonation()
 		{
-			var reader = new Scanner(null);
-			reader.UnreadLine("\t16805\t01.06.2010\t80,00\tH\tKD\tMustermann, Markus");
+			var reader = new FakeScanner(@"
+	16805	01.06.2010	80,00	H	KD	Mustermann, Markus");
 			var donation = new ProcessingDonations(reader).NextDonation;
 			AssertEx.DonationEqual(new Donation(80, new DateTime(2010, 06, 01), "Mustermann, Markus", 16805),
 				donation);
@@ -35,7 +35,8 @@ namespace TntMPDConverter
 			var reader = new FakeScanner(@"
 	16448	22.06.2010	51,13	H	KD 	Mustermann, Markus
 	21860	25.06.2010	80,00	H	KD 	Mueller, Frieda
-Projekt	12345  Missionar, Fritz	Soll €	Haben €
+
+Projekt	12345  Missionar, Fritz	Soll â‚¬	Haben â‚¬
 	16800	28.06.2010	26,00	H	KD 	doppelt
 	11706	30.06.2010	16,00	H	KD 	Musterfrau, Elfriede");
 			var processingDonations = new ProcessingDonations(reader);
@@ -47,6 +48,17 @@ namespace TntMPDConverter
 				processingDonations.NextDonation);
 			AssertEx.DonationEqual(new Donation(16.00m, new DateTime(2010, 06, 30), "Musterfrau, Elfriede", 11706),
 				processingDonations.NextDonation);
+		}
+
+		[Test]
+		public void MultiLine()
+		{
+			var reader = new FakeScanner(@"
+	16805	01.06.2010	80,00	H	KD	Mustermann, Markus
+						Continued");
+			var donation = new ProcessingDonations(reader).NextDonation;
+			AssertEx.DonationEqual(new Donation(80, new DateTime(2010, 06, 01),
+				"Mustermann, Markus Continued", 16805), donation);
 		}
 	}
 }

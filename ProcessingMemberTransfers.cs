@@ -1,3 +1,5 @@
+// Copyright (c) 2013, Eberhard Beilharz.
+// Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
 using System;
 using System.Globalization;
 
@@ -12,47 +14,30 @@ namespace TntMPDConverter
 			m_AccountNo = accountNo;
 		}
 
-		public override Donation NextDonation
+		protected override int NumberOfFields { get { return 6; }}
+		protected override int DonorIndex { get { return 5; }}
+
+		protected override bool IsContinuationLine(string[] partsOfLine)
 		{
-			get
+			return string.IsNullOrEmpty(partsOfLine[1]) || string.IsNullOrEmpty(partsOfLine[2]);
+		}
+
+		protected override Donation CreateDonation(string[] partsOfLine, CultureInfo cultureInfo)
+		{
+			// 30.10.2012	100,00	H	UM 867	Umb. von Frieder Friederich
+			// [1]          [2]    [3]  [4]     [5]
+			var donation = new Donation
 			{
-				var cultureInfo = new CultureInfo("de-DE");
-				Donation donation = null;
-				string line = Reader.ReadLine();
-				while (true)
-				{
-					if (line.Trim() != "")
-					{
-						string[] partsOfLine = line.Split(new[] { '\t' });
-						if (partsOfLine.Length != 6)
-						{
-							if (IsEndOfDonation(line, partsOfLine[0]))
-								return donation;
-						}
-						else if (Replacements.IncludeEntry(m_AccountNo, partsOfLine[5]))
-						{
-							// 30.10.2012	100,00	H	UM 867	Umb. von Frieder Friederich
-							// [1]          [2]    [3]  [4]     [5]
-							donation = new Donation
-							{
-								Date = Convert.ToDateTime(partsOfLine[1], cultureInfo),
-								Amount = Convert.ToDecimal(partsOfLine[2], cultureInfo),
-								Donor = partsOfLine[5],
-								DonorNo = (uint)partsOfLine[5].GetHashCode()
-							};
-							if (partsOfLine[3] == "S")
-							{
-								donation.Amount = -donation.Amount;
-							}
-							Replacements.ApplyReplacements(donation);
-							if (!string.IsNullOrEmpty(donation.Donor))
-								return donation;
-							donation = null;
-						}
-					}
-					line = Reader.ReadLine();
-				}
+				Date = Convert.ToDateTime(partsOfLine[1], cultureInfo),
+				Amount = Convert.ToDecimal(partsOfLine[2], cultureInfo),
+				Donor = partsOfLine[5],
+				DonorNo = (uint)partsOfLine[5].GetHashCode()
+			};
+			if (partsOfLine[3] == "S")
+			{
+				donation.Amount = -donation.Amount;
 			}
+			return donation;
 		}
 	}
 }
