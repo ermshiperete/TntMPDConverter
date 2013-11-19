@@ -6,7 +6,7 @@ Dieses Programm erlaubt die Umwandlung der Projektabrechnung von Wycliff e.V. in
 Voraussetzungen
 ---------------
 Lauffähig unter Windows und Linux.
-Microsoft .NET Framework 2 (oder neuer) oder Mono muss installiert sein.
+Microsoft .NET Framework 4.0 (oder neuer) oder Mono muss installiert sein.
 
 Installation
 ------------
