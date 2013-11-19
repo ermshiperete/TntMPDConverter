@@ -71,6 +71,7 @@
         <Command type="AfterBuild" command="cp ${TargetFile} ${SolutionDir}/released" />
         <Command type="AfterBuild" command="cp -r ${ProjectDir}/Libs/linux ${SolutionDir}/released" />
         <Command type="AfterBuild" command="cp -r ${ProjectDir}/Libs/windows ${SolutionDir}/released" />
+        <Command type="AfterBuild" command="cp ${TargetDir}/nrtftree-library.dll ${SolutionDir}/released" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

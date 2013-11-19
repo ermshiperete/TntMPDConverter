@@ -4,6 +4,7 @@
 *~
 *.swp
 test-results/
+TestResult.xml
 bin/
 obj/
 released/TntMPDConverter.*
@@ -11,5 +12,7 @@ released/TntMpdConverter.*
 released/replace.config
 released/linux/
 released/windows/
+released/nrtftree-library.dll
+binaries/
 TntMPDConverter.wiki/
 latestVersion/
