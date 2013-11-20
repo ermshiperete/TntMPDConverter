@@ -36,6 +36,18 @@ Include=^.+$");
 		}
 
 		[Test]
+		public void NotIncluded()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[K715]
+Include=Something");
+			var reader = new FakeScanner(@"
+	30.10.2012	100,00	H	UM 867	Frieder Friederich");
+			var processingDonations = new ProcessingMemberTransfers(715, reader);
+			Assert.That(processingDonations.NextDonation, Is.Null);
+		}
+
+		[Test]
 		public void MultiLine()
 		{
 			MyReplacementManager.CreateReplacementFile(@"
