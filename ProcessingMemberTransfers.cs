@@ -24,6 +24,9 @@ namespace TntMPDConverter
 
 		protected override Donation CreateDonation(string[] partsOfLine, CultureInfo cultureInfo)
 		{
+			if (!Replacements.IncludeEntry(m_AccountNo, partsOfLine[DonorIndex]))
+				return null;
+
 			// 30.10.2012	100,00	H	UM 867	Umb. von Frieder Friederich
 			// [1]          [2]    [3]  [4]     [5]
 			var donation = new Donation

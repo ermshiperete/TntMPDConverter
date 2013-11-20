@@ -6,9 +6,22 @@ namespace TntMPDConverter
 	[TestFixture]
 	public class ProcessingOtherTransfersTests
 	{
+		[TestFixtureSetUp]
+		public virtual void FixtureSetUp()
+		{
+			MyReplacementManager.Create();
+		}
+
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			MyReplacementManager.Finish();
+		}
+
 		[Test]
 		public void Transfer()
 		{
+			MyReplacementManager.CreateReplacementFile(string.Empty);
 			var reader = new FakeScanner(@"
 	23.11.2012	US$	209,64	162,20	H	8021	SWZ Member gift");
 			var processingDonations = new ProcessingOtherTransfers(3224, reader);
@@ -17,8 +30,21 @@ namespace TntMPDConverter
 		}
 
 		[Test]
+		public void Excluded()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[K3224]
+Exclude=^.+$");
+			var reader = new FakeScanner(@"
+	23.11.2012	US$	209,64	162,20	H	8021	SWZ Member gift");
+			var processingDonations = new ProcessingOtherTransfers(3224, reader);
+			Assert.That(processingDonations.NextDonation, Is.Null);
+		}
+
+		[Test]
 		public void MultipleMonthsGiveSameDonorNo()
 		{
+			MyReplacementManager.CreateReplacementFile(string.Empty);
 			var reader = new FakeScanner(@"
 	23.11.2012	US$	209,64	162,20	H	8021	SWZ Member gift");
 			var processingDonations = new ProcessingOtherTransfers(3224, reader);
@@ -35,6 +61,7 @@ namespace TntMPDConverter
 		[Test]
 		public void MultiLineTransfer()
 		{
+			MyReplacementManager.CreateReplacementFile(string.Empty);
 			var reader = new FakeScanner(@"
 	23.11.2012	US$	209,64	162,20	H	8021	437921 BT-BANK TRANSFER
 							OPP_TransAmount=-209,64");

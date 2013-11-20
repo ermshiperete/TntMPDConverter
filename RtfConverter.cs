@@ -88,7 +88,7 @@ namespace TntMPDConverter
 						}
 				}
 			}
-			Console.WriteLine("Document: " + m_Builder.ToString());
+			//Console.WriteLine("Document: " + m_Builder.ToString());
 			return m_Builder.ToString();
 		}
 

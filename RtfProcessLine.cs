@@ -139,8 +139,6 @@ namespace TntMPDConverter
 			var prevBuilder = m_Builder;
 			m_Builder = new StringBuilder();
 			int tabCount = 0;
-			int iCurrentLineTabStops = 0;
-			int iCurrentParaTabStops = 0;
 			foreach (RtfTreeNode child in node.ChildNodes)
 			{
 				switch (child.NodeType)

@@ -27,7 +27,7 @@ namespace TntMPDConverter
 
 		protected override Donation CreateDonation(string[] partsOfLine, CultureInfo cultureInfo)
 		{
-			if (Replacements.ExcludeEntry(m_AccountNo, partsOfLine[7]))
+			if (Replacements.ExcludeEntry(m_AccountNo, partsOfLine[DonorIndex]))
 				return null;
 
 			// 23.11.2012	US$	209,64	162,20	H	8021	SWZ Member gift
@@ -36,7 +36,7 @@ namespace TntMPDConverter
 			{
 				Date = Convert.ToDateTime(partsOfLine[1], cultureInfo),
 				Amount = Convert.ToDecimal(partsOfLine[4], cultureInfo),
-				Donor = partsOfLine[7],
+				Donor = partsOfLine[DonorIndex],
 				Remarks = string.Format("Netto; {0} {1}", partsOfLine[2],
 					partsOfLine[3]),
 				TenderedAmount = Convert.ToDecimal(partsOfLine[3], cultureInfo),
