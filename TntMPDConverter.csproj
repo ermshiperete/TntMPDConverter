@@ -93,7 +93,6 @@
     <Reference Include="Xwt">
       <HintPath>Libs\Xwt.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
