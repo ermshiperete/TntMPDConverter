@@ -75,6 +75,7 @@
     <Compile Include="MyReplacementManager.cs" />
     <Compile Include="RtfConverterTests.cs" />
     <Compile Include="ProcessingOtherProceedsTests.cs" />
+    <Compile Include="RtfProcessLineTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -11,7 +11,7 @@ namespace TntMPDConverter
 	public class ProcessDonors : State
 	{
 		private readonly Regex donorInfo =
-			new Regex(@"^\t(?<no>[0-9]+)\t(?<name>[^\t]+)\t(?<street>[^\t]+)(\t(?<phones>[^\t]+))?\t(?<count>[0-9]+)\t(?<eur>[0-9,.]+)(\t(?<dm>[0-9,.]+))?$");
+			new Regex(@"^\t(?<no>[0-9]+)\t(?<name>[^\t]+)\t(?<street>[^\t]+)(\t(?<phones>[^\t]+))?\t(?<count>[0-9]+)\t(?<eur>-?[0-9,.]+)(\t(?<dm>[0-9,.]+))?$");
 		private readonly Regex cityInfo =
 			new Regex(@"^\t\t(?<name>[^\t]*)(\t(((?<plz>[0-9]+) )?(?<city>\p{Lu}[^\t]+))?(\t(?<phone2>.*))?)?");
 		private readonly Regex emailInfo =

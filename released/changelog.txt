@@ -1,4 +1,4 @@
-2013-11-xx version 1.4.8
+2013-11-20 version 1.4.8
 * Fix/improve multiline handling
 
 2013-11-19 version 1.4.7

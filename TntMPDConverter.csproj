@@ -163,6 +163,8 @@
     <Compile Include="ReplacementManager.cs" />
     <Compile Include="ProcessingOtherTransfers.cs" />
     <Compile Include="RtfConverter.cs" />
+    <Compile Include="RtfProcessLine.cs" />
+    <Compile Include="RtfLine.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
