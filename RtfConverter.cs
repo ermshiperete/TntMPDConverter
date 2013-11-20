@@ -30,7 +30,7 @@ namespace TntMPDConverter
 					return false;
 				EncounteredProject = true;
 			}
-			else if (text == "Spender-\tTelefon (privat, dienstl.)\tSpenden\n" ||
+			else if (text.StartsWith("Spender-\tTelefon (privat, dienstl.)\tSpenden") ||
 				text.StartsWith("Nr.\tName\tAdresse\tFax, E-Mail\tAnz."))
 			{
 				return false;

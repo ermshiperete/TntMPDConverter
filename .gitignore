@@ -3,6 +3,9 @@
 *.userprefs
 *~
 *.swp
+*.user
+*.cache
+*.suo
 test-results/
 TestResult.xml
 bin/

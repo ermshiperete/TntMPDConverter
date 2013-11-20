@@ -126,7 +126,7 @@ namespace TntMPDConverter
 						foreach (var thisPhone in phone.ToString().Split('\n'))
 						{
 							if (!string.IsNullOrEmpty(thisPhone))
-								phoneNos.Add(thisPhone);
+								phoneNos.Add(thisPhone.TrimEnd('\r'));
 						}
 					}
 
