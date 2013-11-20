@@ -33,7 +33,11 @@ namespace TntMPDConverter
 				"\\margb1133\\viewkind4\\pard\\cf0\\fs40\\f0\\b\\ul First line\\line\\par Second line\\par}");
 
 			var converter = new RtfConverter(m_TempFile);
-			Assert.That(converter.Text, Is.EqualTo("First line\n\nSecond line\n"));
+			Assert.That(converter.Text, Is.EqualTo(
+@"First line
+
+Second line
+"));
 		}
 
 		[Test]
@@ -47,7 +51,9 @@ namespace TntMPDConverter
 				@"}");
 
 			var converter = new RtfConverter(m_TempFile);
-			Assert.That(converter.Text, Is.EqualTo("\tFirst\tLine\n"));
+			Assert.That(converter.Text, Is.EqualTo(
+@"	First	Line
+"));
 		}
 
 		[Test]
@@ -60,12 +66,15 @@ namespace TntMPDConverter
 				@"\pard\plain\sb82\tx1362\tqr\tx2785\tqr\tx3334\tqr\tx4220\tx4310\tx4466\tx5443" +
 				@"{\plain\tab\fs14\f3\cf0\cb1 One\plain\tab\fs14\f3\cf0\cb1 Two\plain\tab\fs14\f3\cf0\cb1 Three" +
 				@"\plain\tab\fs14\f3\cf0\cb1 Four\plain\tab\fs14\f3\cf0\cb1 Five\plain\tab\fs14\f3\cf0\cb1 Six" +
-				@"\plain\tab\fs14\f3\cf0\cb1 Seven {\fs18\par}}" +
+				@"\plain\tab\fs14\f3\cf0\cb1 Seven{\fs18\par}}" +
 				@"\pard\plain\tx5443{\plain\tab\fs14\f3\cf0\cb1 Eight{\fs15\par}}" +
 				@"}");
 
 			var converter = new RtfConverter(m_TempFile);
-			Assert.That(converter.Text, Is.EqualTo("\tOne\tTwo\tThree\tFour\tFive\tSix\tSeven \n\t\t\t\t\t\t\tEight\n"));
+			Assert.That(converter.Text, Is.EqualTo(
+@"	One	Two	Three	Four	Five	Six	Seven
+							Eight
+"));
 		}
 
 		[Test]
@@ -78,13 +87,17 @@ namespace TntMPDConverter
 				@"\pard\plain\sb82\tx1362\tqr\tx2785\tqr\tx3334\tqr\tx4220\tx4310\tx4466\tx5443" +
 				@"{\plain\tab\fs14\f3\cf0\cb1 One\plain\tab\fs14\f3\cf0\cb1 Two\plain\tab\fs14\f3\cf0\cb1 Three" +
 				@"\plain\tab\fs14\f3\cf0\cb1 Four\plain\tab\fs14\f3\cf0\cb1 Five\plain\tab\fs14\f3\cf0\cb1 Six" +
-				@"\plain\tab\fs14\f3\cf0\cb1 Seven {\fs18\par}}" +
+				@"\plain\tab\fs14\f3\cf0\cb1 Seven{\fs18\par}}" +
 				@"\pard\plain\tx5443{\plain\tab\fs14\f3\cf0\cb1 Eight{\fs15\par}}" +
 				@"\pard\plain\tx5443{\plain\tab\fs14\f3\cf0\cb1 Nine{\fs15\par}}" +
 				@"}");
 
 			var converter = new RtfConverter(m_TempFile);
-			Assert.That(converter.Text, Is.EqualTo("\tOne\tTwo\tThree\tFour\tFive\tSix\tSeven \n\t\t\t\t\t\t\tEight\n\t\t\t\t\t\t\tNine\n"));
+			Assert.That(converter.Text, Is.EqualTo(
+@"	One	Two	Three	Four	Five	Six	Seven
+							Eight
+							Nine
+"));
 		}
 
 		[Test]
@@ -99,15 +112,18 @@ namespace TntMPDConverter
 				@"\pard\plain\sb82\tx1362\tqr\tx2785\tqr\tx3334\tqr\tx4220\tx4310\tx4466\tx5443" +
 				@"{\plain\tab\fs14\f3\cf0\cb1 One\plain\tab\fs14\f3\cf0\cb1 Two\plain\tab\fs14\f3\cf0\cb1 Three" +
 				@"\plain\tab\fs14\f3\cf0\cb1 Four\plain\tab\fs14\f3\cf0\cb1 Five\plain\tab\fs14\f3\cf0\cb1 Six" +
-				@"\plain\tab\fs14\f3\cf0\cb1 Seven {\fs18\par}}" +
+				@"\plain\tab\fs14\f3\cf0\cb1 Seven{\fs18\par}}" +
 				@"\pard\plain\tx5443{\plain\tab\fs14\f3\cf0\cb1 Eight{\fs15\par}}" +
 				@"\pard\plain\tx5443{\plain\tab\fs14\f3\cf0\cb1 Nine{\fs15\par}}" +
 				@"}");
 
 			var converter = new RtfConverter(m_TempFile);
-			Assert.That(converter.Text, Is.EqualTo("\t3224\tWeitergel. Spenden v.a. WO's\t319,82\n" +
-				"\tOne\tTwo\tThree\tFour\tFive\tSix\tSeven \n" +
-				"\t\t\t\t\t\t\tEight\n\t\t\t\t\t\t\tNine\n"));
+			Assert.That(converter.Text, Is.EqualTo(
+@"	3224	Weitergel. Spenden v.a. WO's	319,82
+	One	Two	Three	Four	Five	Six	Seven
+							Eight
+							Nine
+"));
 		}
 
 		[Test]
@@ -122,7 +138,7 @@ namespace TntMPDConverter
 				@"\pard\plain\sb82\tx1362\tqr\tx2785\tqr\tx3334\tqr\tx4220\tx4310\tx4466\tx5443" +
 				@"{\plain\tab\fs14\f3\cf0\cb1 One\plain\tab\fs14\f3\cf0\cb1 Two\plain\tab\fs14\f3\cf0\cb1 Three" +
 				@"\plain\tab\fs14\f3\cf0\cb1 Four\plain\tab\fs14\f3\cf0\cb1 Five\plain\tab\fs14\f3\cf0\cb1 Six" +
-				@"\plain\tab\fs14\f3\cf0\cb1 Seven {\fs18\par}}" +
+				@"\plain\tab\fs14\f3\cf0\cb1 Seven{\fs18\par}}" +
 				@"\pard\plain\tx5443{\plain\tab\fs14\f3\cf0\cb1 Eight{\fs15\par}}" +
 				@"\pard\plain\tx5443{\plain\tab\fs14\f3\cf0\cb1 Nine{\fs15\par}}" +
 				@"\pard\plain\sb263\tqr\tx802\tx907\tqr\tx10263{\plain\tab\fs18\f8\cf0\cb1 3225" +
@@ -130,10 +146,13 @@ namespace TntMPDConverter
 				@"}");
 
 			var converter = new RtfConverter(m_TempFile);
-			Assert.That(converter.Text, Is.EqualTo("\t3224\tWeitergel. Spenden v.a. WO's\t319,82\n" +
-				"\tOne\tTwo\tThree\tFour\tFive\tSix\tSeven \n" +
-				"\t\t\t\t\t\t\tEight\n\t\t\t\t\t\t\tNine\n" +
-				"\t3225\tSonstwas\t111,22\n"));
+			Assert.That(converter.Text, Is.EqualTo(
+@"	3224	Weitergel. Spenden v.a. WO's	319,82
+	One	Two	Three	Four	Five	Six	Seven
+							Eight
+							Nine
+	3225	Sonstwas	111,22
+"));
 		}
 
 		[Test]
@@ -155,10 +174,12 @@ namespace TntMPDConverter
 				@"}");
 
 			var converter = new RtfConverter(m_TempFile);
-			Assert.That(converter.Text, Is.EqualTo("\t3224\tWeitergel. Spenden v.a. WO's\t319,82\n" +
-				"\t12345\tOrganization\tStreet 1\tp: 0123456\t1\t150,00\n" +
-				"\t\tOrgCont\t12345 Somewhere\n" +
-				"\t\t\t\tsomeone@email.com\n"));
+			Assert.That(converter.Text, Is.EqualTo(
+@"	3224	Weitergel. Spenden v.a. WO's	319,82
+	12345	Organization	Street 1	p: 0123456	1	150,00
+		OrgCont	12345 Somewhere
+				someone@email.com
+"));
 		}
 
 		[Test]
