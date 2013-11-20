@@ -1,6 +1,15 @@
 2013-x-x Version 1.5
 * Switched to cross-platform toolkit xwt
 
+2013-11-20 version 1.4.8
+* Fix/improve multiline handling
+
+2013-11-19 version 1.4.7
+* Improve handling of multiline records
+* Support multiline organizations (issue #4)
+* Convert donor email address (issue #10)
+* Support tendered_amount/currency fields (issue #11)
+
 2013-08-31 Version 1.4.6
 * Put foreign currency in memo field instead of motivation (issue #12).
 

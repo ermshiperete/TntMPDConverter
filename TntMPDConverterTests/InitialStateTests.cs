@@ -1,3 +1,5 @@
+// Copyright (c) 2013, Eberhard Beilharz.
+// Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,11 +8,7 @@ using TntMPDConverter;
 
 namespace TntMPDConverter
 {
-	/// ----------------------------------------------------------------------------------------
-	/// <summary>
-	/// 
-	/// </summary>
-	/// ----------------------------------------------------------------------------------------
+	/// <summary/>
 	[TestFixture]
 	public class InitialStateTests
 	{
@@ -20,12 +18,12 @@ namespace TntMPDConverter
 		public void SetUp()
 		{
 			m_Reader = new FakeScanner(
-"Projekt\t301234  Mustermann, Markus\tSoll Ä\tHaben Ä\n" +
+"Projekt\t301234  Mustermann, Markus\tSoll ‚Ç¨\tHaben ‚Ç¨\n" +
 "Projektabrechnung\n" +
 "Erstellung:\t15.10.2009\n" +
 "Projekt\t301234  Mustermann, Markus\n" +
 "Zeitraum:\t01.09.2009 - 30.09.2009\n" +
-"\tErtr‰ge\tSoll Ä\tHaben Ä\n" +
+"\tErtr√§ge\tSoll ‚Ç¨\tHaben ‚Ç¨\n" +
 "\t7100\tSpenden (wiss.) Arbeit\t3.694,59\n" +
 "\t16747\t01.09.2009\t10,23\tH\tKD \tMerkel, Angela");
 		}

@@ -1,9 +1,10 @@
+// Copyright (c) 2013, Eberhard Beilharz.
+// Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using TntMPDConverter.Properties;
 
 namespace TntMPDConverter
@@ -43,28 +44,8 @@ namespace TntMPDConverter
 
 		private static string ConvertToText(string rtfFileName)
 		{
-			var tmpFile = rtfFileName;
-			try
-			{
-				if (IsUnix)
-				{
-					// need to convert file from Windows-1252 to unicode because rtBox.LoadFile uses Encoding.Default
-					// which is UTF-8 on Linux.
-					tmpFile = Path.GetTempFileName();
-					File.WriteAllText(tmpFile, File.ReadAllText(rtfFileName,
-						Encoding.GetEncoding("Windows-1252")));
-				}
-				using (var rtBox = new RichTextBox())
-				{
-					rtBox.LoadFile(tmpFile, RichTextBoxStreamType.RichText);
-					return rtBox.Text;
-				}
-			}
-			finally
-			{
-				if (tmpFile != rtfFileName)
-					File.Delete(tmpFile);
-			}
+			var rtfConverter = new RtfConverter(rtfFileName);
+			return rtfConverter.Text;
 		}
 
 		private string ProcessDonations(ref State state)
@@ -78,7 +59,7 @@ namespace TntMPDConverter
 			}
 			var builder = new StringBuilder();
 			builder.AppendLine("[GIFTS]");
-			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\",\"MEMO\"");
+			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"DISPLAY_DATE\",\"AMOUNT\",\"DONATION_ID\",\"DESIGNATION\",\"MOTIVATION\",\"MEMO\",\"TENDERED_AMOUNT\",\"TENDERED_CURRENCY\"");
 			var cultureInfo = new CultureInfo("en-US", false);
 			while (state != null)
 			{
@@ -91,12 +72,14 @@ namespace TntMPDConverter
 						var donation = processingDonations.NextDonation;
 						if (donation != null)
 						{
-							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\",\"{6}\"", 
+							builder.AppendLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"\",\"{6}\",\"{7}\",\"{8}\"",
 								donation.DonorNo, donation.Donor,
 								donation.Date.ToString("d", cultureInfo),
 								donation.Amount.ToString(cultureInfo),
 								donation.BookingId, projectNo,
-								donation.Remarks));
+								donation.Remarks,
+								string.IsNullOrEmpty(donation.TenderedCurrency) ? string.Empty : donation.TenderedAmount.ToString(),
+								donation.TenderedCurrency));
 							// we use m_Donations to track donations without donor address,
 							// so it doesn't matter if we override one if one donor has made
 							// multiple donations.
@@ -118,11 +101,11 @@ namespace TntMPDConverter
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("[DONORS]");
 			builder.AppendLine("\"PEOPLE_ID\",\"ACCT_NAME\",\"PERSON_TYPE\"," + 
-				"\"LAST_NAME_ORG\",\"FIRST_NAME\",\"MIDDLE_NAME\",\"TITLE\",\"SUFFIX\"," + 
+				"\"LAST_NAME_ORG\",\"ORG_CONTACT_PERSON\",\"FIRST_NAME\",\"MIDDLE_NAME\",\"TITLE\",\"SUFFIX\"," + 
 				"\"SP_LAST_NAME\",\"SP_FIRST_NAME\",\"SP_MIDDLE_NAME\",\"SP_TITLE\",\"SP_SUFFIX\"," + 
 				"\"ADDR1\",\"ADDR2\",\"ADDR3\",\"ADDR4\",\"CITY\"," + 
 				"\"STATE\",\"ZIP\",\"COUNTRY\",\"CNTRY_DESCR\",\"ADDR_CHANGED\"," + 
-				"\"PHONE\",\"PHONE_CHANGED\"");
+				"\"PHONE\",\"PHONE_CHANGED\",\"EMAIL\"");
 			while (state != null)
 			{
 				var processDonors = state as ProcessDonors;
@@ -131,20 +114,20 @@ namespace TntMPDConverter
 					var donor = processDonors.NextDonor;
 					if (donor != null)
 					{
-						builder.AppendFormat("\"{0}\",\"{1}\",\"{2}\"," + 
+						builder.AppendFormat("\"{0}\",\"{1}\",\"{2}\"," +
 							// Person
-							"\"{3}\",\"{4}\",,\"{5}\",," + 
+							"\"{3}\",\"{4}\",\"{5}\",,\"{6}\",," +
 							// Spouse
-							"\"{6}\",\"{7}\",,\"{8}\",," + 
+							"\"{7}\",\"{8}\",,\"{9}\",," +
 							// Address
-							"\"{9}\",,,,\"{10}\",,\"{11}\",\"DE\",\"Germany\",," + 
+							"\"{10}\",,,,\"{11}\",,\"{12}\",\"DE\",\"Germany\",," +
 							// Phone
-							"\"{12}\",\" \"", 
-							donor.DonorNo, donor.Name, donor.PersonType, 
-							donor.LastName, donor.FirstName, donor.Title, 
+							"\"{13}\",\" \",\"{14}\"",
+							donor.DonorNo, donor.Name, donor.PersonType,
+							donor.LastName, donor.ContactPerson, donor.FirstName, donor.Title,
 							donor.SpouseLastName, donor.SpouseFirstName, donor.SpouseTitle,
-							donor.Street, donor.City, donor.Plz, 
-							donor.CombinedPhoneNo);
+							donor.Street, donor.City, donor.Plz,
+							donor.CombinedPhoneNo, donor.Email);
 						builder.AppendLine();
 						m_Donations.Remove(donor.DonorNo);
 					}

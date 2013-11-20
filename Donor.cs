@@ -43,11 +43,12 @@ namespace TntMPDConverter
 		{
 		}
 
-		public Donor(uint donorNo, string name, string street, string plz, string city,
-			string[] phoneNos, string email, int donationsCount, decimal amount)
+		public Donor(uint donorNo, string name, string contactPerson, string street, string plz,
+			string city, string[] phoneNos, string email, int donationsCount, decimal amount)
 		{
 			DonorNo = donorNo;
 			Name = name;
+			ContactPerson = contactPerson;
 			Street = street;
 			Plz = plz;
 			City = city;
@@ -59,6 +60,7 @@ namespace TntMPDConverter
 
 		public uint DonorNo { get; private set; }
 		public string Name { get; private set; }
+		public string ContactPerson { get; private set; }
 		public string Street { get; private set; }
 		public string Plz { get; private set; }
 		public string City { get; private set; }
@@ -73,15 +75,35 @@ namespace TntMPDConverter
 				var bldr = new StringBuilder();
 				foreach (var phone in PhoneNos)
 				{
-					var str = phone;
 					if (bldr.Length > 0)
 						bldr.Append(", ");
-					if (phone.StartsWith("p:"))
-						str = phone.Substring(2).TrimStart();
-					bldr.Append(str);
+					bldr.Append(SplitPhone(phone));
 				}
 				return bldr.ToString();
 			}
+		}
+
+		private string SplitPhoneHelper(string phone, string toFind)
+		{
+			var phoneBuilder = new StringBuilder();
+			if (phone.Contains(toFind))
+			{
+				int ip = phone.IndexOf(toFind);
+				if (ip > 0)
+				{
+					phoneBuilder.Append(phone.Substring(0, ip).Trim());
+					phoneBuilder.Append(", ");
+				}
+				phoneBuilder.Append(phone.Substring(ip + toFind.Length).Trim());
+			}
+			else
+				phoneBuilder.Append(phone);
+			return phoneBuilder.ToString();
+		}
+
+		private string SplitPhone(string phone)
+		{
+			return SplitPhoneHelper(SplitPhoneHelper(phone, "p:"), "d:");
 		}
 		
 		private string SplitLast(string name, out string rest)

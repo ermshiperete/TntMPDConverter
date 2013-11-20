@@ -1,51 +1,38 @@
+// Copyright (c) 2013, Eberhard Beilharz.
+// Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
+using System;
+using System.Globalization;
+
 namespace TntMPDConverter
 {
-	using System;
-	using System.Globalization;
-
-	internal class ProcessingOtherProceeds : ProcessingDonations
+	public class ProcessingOtherProceeds : ProcessingDonations
 	{
 		public ProcessingOtherProceeds(Scanner reader) : base(reader)
 		{
 		}
 
-		public override Donation NextDonation
+		protected override int NumberOfFields { get { return 6; }}
+		protected override int DonorIndex { get { return 5; }}
+
+		protected override bool IsContinuationLine(string[] partsOfLine)
 		{
-			get
+			return string.IsNullOrEmpty(partsOfLine[1]) || string.IsNullOrEmpty(partsOfLine[2]);
+		}
+
+		protected override Donation CreateDonation(string[] partsOfLine, CultureInfo cultureInfo)
+		{
+			var donation = new Donation
 			{
-				var cultureInfo = new CultureInfo("de-DE");
-				Donation donation = null;
-				string line = Reader.ReadLine();
-				while (true)
-				{
-					if (line.Trim() != "")
-					{
-						string[] textArray1 = line.Split(new[] { '\t' });
-						if (textArray1.Length != 6)
-						{
-							if (IsEndOfDonation(line, textArray1[0]))
-								return donation;
-						}
-						else
-						{
-							donation = new Donation
-							{
-								DonorNo = 998,
-								Date = Convert.ToDateTime(textArray1[1], cultureInfo),
-								Amount = Convert.ToDecimal(textArray1[2], cultureInfo)
-							};
-							if (textArray1[3] == "S")
-							{
-								donation.Amount = -donation.Amount;
-							}
-							donation.Donor = textArray1[5];
-							Replacements.ApplyReplacements(donation);
-							return donation;
-						}
-					}
-					line = Reader.ReadLine();
-				}
+				DonorNo = 998,
+				Date = Convert.ToDateTime(partsOfLine[1], cultureInfo),
+				Amount = Convert.ToDecimal(partsOfLine[2], cultureInfo)
+			};
+			if (partsOfLine[3] == "S")
+			{
+				donation.Amount = -donation.Amount;
 			}
+			donation.Donor = partsOfLine[5];
+			return donation;
 		}
 	}
 }

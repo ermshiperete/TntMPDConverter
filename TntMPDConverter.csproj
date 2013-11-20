@@ -44,8 +44,6 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <Optimize>false</Optimize>
@@ -61,8 +59,6 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <FileAlignment>4096</FileAlignment>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
@@ -75,6 +71,7 @@
         <Command type="AfterBuild" command="cp ${TargetFile} ${SolutionDir}/released" />
         <Command type="AfterBuild" command="cp -r ${ProjectDir}/Libs/linux ${SolutionDir}/released" />
         <Command type="AfterBuild" command="cp -r ${ProjectDir}/Libs/windows ${SolutionDir}/released" />
+        <Command type="AfterBuild" command="cp ${TargetDir}/nrtftree-library.dll ${SolutionDir}/released" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -154,6 +151,9 @@
     <Compile Include="ReplacementManager.cs" />
     <Compile Include="ProcessingOtherTransfers.cs" />
     <Compile Include="ConvertDialog.cs" />
+    <Compile Include="RtfConverter.cs" />
+    <Compile Include="RtfProcessLine.cs" />
+    <Compile Include="RtfLine.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -188,5 +188,9 @@
       <Link>Xwt.WPF.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <ProjectReference Include="nrtftree\nrtftree-library\nrtftree-library.csproj">
+      <Project>{7114E863-9D7D-4507-B38B-B859A0C1B836}</Project>
+      <Name>nrtftree-library</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
