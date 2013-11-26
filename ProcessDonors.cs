@@ -1,13 +1,13 @@
+// Copyright (c) 2013, Eberhard Beilharz
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Text;
 
-
 namespace TntMPDConverter
 {
-
 	public class ProcessDonors : State
 	{
 		private readonly Regex donorInfo =

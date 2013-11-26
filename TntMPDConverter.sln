@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		released\replace.config.sample = released\replace.config.sample
 		released\linux.config = released\linux.config
 		released\windows.config = released\windows.config
+		LICENSE = LICENSE
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "linux", "linux", "{4A832653-727D-4E06-B85E-DBCC04F1B2A0}"
@@ -53,7 +54,7 @@ Global
 		StartupItem = TntMPDConverter.csproj
 		Policies = $0
 		$0.StandardHeader = $1
-		$1.Text = @Copyright (c) ${Year}, Eberhard Beilharz.\nDistributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
+		$1.Text = @Copyright (c) ${Year}, Eberhard Beilharz\nThis software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 		$1.IncludeInNewFiles = True
 		$0.NameConventionPolicy = $2
 		$2.Rules = $3

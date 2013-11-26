@@ -1,4 +1,5 @@
-// Copyright (c) 2011, Eberhard Beilharz. All Rights Reserved.
+// Copyright (c) 2013, Eberhard Beilharz
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
 using NUnit.Framework;
 namespace TntMPDConverter
