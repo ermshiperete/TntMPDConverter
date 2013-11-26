@@ -1,4 +1,6 @@
-﻿namespace TntMPDConverter
+﻿// Copyright (c) 2013, Eberhard Beilharz
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
+namespace TntMPDConverter
 {
 	public class FakeScanner: Scanner
 	{

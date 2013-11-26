@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) 2013, Eberhard Beilharz
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
+using System;
 using System.Text.RegularExpressions;
 
 namespace TntMPDConverter

@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		released\changelog.txt = released\changelog.txt
 		released\readme.txt = released\readme.txt
 		released\replace.config.sample = released\replace.config.sample
+		LICENSE = LICENSE
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nrtftree-library", "nrtftree\nrtftree-library\nrtftree-library.csproj", "{7114E863-9D7D-4507-B38B-B859A0C1B836}"
@@ -40,7 +41,7 @@ Global
 		StartupItem = TntMPDConverter.csproj
 		Policies = $0
 		$0.StandardHeader = $1
-		$1.Text = @Copyright (c) ${Year}, Eberhard Beilharz.\nDistributable under the terms of the MIT license (http://opensource.org/licenses/MIT).
+		$1.Text = @Copyright (c) ${Year}, Eberhard Beilharz\nThis software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 		$1.IncludeInNewFiles = True
 		$0.NameConventionPolicy = $2
 		$2.Rules = $3

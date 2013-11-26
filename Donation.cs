@@ -1,7 +1,9 @@
+// Copyright (c) 2013, Eberhard Beilharz
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
+using System;
+
 namespace TntMPDConverter
 {
-	using System;
-
 	public class Donation
 	{
 		private int m_Id;

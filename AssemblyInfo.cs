@@ -1,4 +1,5 @@
-// Assembly TntMPDConverter, Version 1.0.0.0
+// Copyright (c) 2013, Eberhard Beilharz
+// This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
 [assembly: System.Reflection.AssemblyVersion("1.5.0.0")]
 [assembly: System.Diagnostics.Debuggable(System.Diagnostics.DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
