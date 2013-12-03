@@ -20,8 +20,8 @@ namespace TntMPDConverter
 			public uint DonorNo;
 		}
 
-		private const int Replacements = -1;
-		private const int RegexReplacements = -2;
+		public const int Replacements = -1;
+		public const int RegexReplacements = -2;
 
 		static ReplacementManager()
 		{
