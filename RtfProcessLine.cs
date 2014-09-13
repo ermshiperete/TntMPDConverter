@@ -145,6 +145,7 @@ namespace TntMPDConverter
 				{
 					case RtfNodeType.Group:
 					case RtfNodeType.Text:
+					case RtfNodeType.Control:
 						AddText(m_Builder, child.Text);
 						break;
 					case RtfNodeType.Keyword:
@@ -157,6 +158,9 @@ namespace TntMPDConverter
 									break;
 								case "b":
 									m_CurrentLine.IsHeader = true;
+									break;
+								case "par":
+									m_Builder.AppendLine();
 									break;
 							}
 							break;
