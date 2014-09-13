@@ -30,8 +30,7 @@ namespace TntMPDConverter
 				MyReplacementManager.OriginalReplacementFileName);
 		}
 
-		[Test]
-		public void ReplacementInfo()
+		private void CreateComplexReplacementFile()
 		{
 			MyReplacementManager.CreateReplacementFile(@"
 # Comment
@@ -49,8 +48,24 @@ Replace=Friederich, Frieder
 Include=^.+$
 [K3224]
 Exclude=Hugo");
+		}
+
+		[Test]
+		public void ReplacementInfo_General()
+		{
+			CreateComplexReplacementFile();
 			var info = MyReplacementManager.Instance.GetReplacementInfo();
 			Assert.AreEqual(3, info.Count);
+			Assert.IsTrue(info.ContainsKey(999));
+			Assert.IsTrue(info.ContainsKey(ReplacementManager.Replacements));
+			Assert.IsTrue(info.ContainsKey(ReplacementManager.RegexReplacements));
+		}
+
+		[Test]
+		public void ReplacementInfo_SpecificAccount()
+		{
+			CreateComplexReplacementFile();
+			var info = MyReplacementManager.Instance.GetReplacementInfo();
 			Assert.IsTrue(info.ContainsKey(999));
 			var value = info[999];
 			Assert.IsTrue(value.ContainsKey("Markus Mustermann"));
@@ -63,28 +78,48 @@ Exclude=Hugo");
 			newDonor = value["F. Mueller"] as ReplacementManager.NewDonor;
 			Assert.AreEqual(996, newDonor.DonorNo);
 			Assert.AreEqual("Mueller, Franz", newDonor.Donor);
+		}
 
-			// Replacements
-			Assert.IsTrue(info.ContainsKey(-1));
-			value = info[-1];
+		[Test]
+		public void ReplacementInfo_Replacements()
+		{
+			CreateComplexReplacementFile();
+			var info = MyReplacementManager.Instance.GetReplacementInfo();
+			Assert.IsTrue(info.ContainsKey(ReplacementManager.Replacements));
+			var value = info[ReplacementManager.Replacements];
 			Assert.IsTrue(value.ContainsKey("Berta"));
 			Assert.AreEqual("Caesar", value["Berta"].Donor);
+		}
 
-			// Regex
-			Assert.IsTrue(info.ContainsKey(-2));
-			value = info[-2];
+		[Test]
+		public void ReplacementInfo_Regex()
+		{
+			CreateComplexReplacementFile();
+			var info = MyReplacementManager.Instance.GetReplacementInfo();
+			Assert.IsTrue(info.ContainsKey(ReplacementManager.RegexReplacements));
+			var value = info[ReplacementManager.RegexReplacements];
 			Assert.AreEqual(1, value.Count);
 			Assert.IsTrue(value.ContainsKey("^Umb\\..+Friederich$"));
 			Assert.AreEqual("Friederich, Frieder", value["^Umb\\..+Friederich$"].Donor);
+		}
 
+		[Test]
+		public void ReplacementInfo_IncludeOtherProceeds()
+		{
 			// K715
+			CreateComplexReplacementFile();
 			var include = MyReplacementManager.Instance.GetIncludeInfo();
 			Assert.IsTrue(include.ContainsKey(715));
 			var includeList = include[715];
 			Assert.AreEqual(1, includeList.Count);
 			Assert.AreEqual("^.+$", includeList[0]);
+		}
 
+		[Test]
+		public void ReplacementInfo_ExcludeOtherTransfers()
+		{
 			// K3224
+			CreateComplexReplacementFile();
 			var exclude = MyReplacementManager.Instance.GetExcludeInfo();
 			Assert.IsTrue(exclude.ContainsKey(3224));
 			var excludeList = exclude[3224];

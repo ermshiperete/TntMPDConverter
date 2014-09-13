@@ -73,6 +73,19 @@ Exclude=^.+$");
 				processingDonations.NextDonation);
 		}
 
+		[Test]
+		public void Replacement()
+		{
+			MyReplacementManager.CreateReplacementFile(@"
+[Replacements]
+579941 OPP_TransAmount=Mustermann, Markus
+");
+			var reader = new FakeScanner(@"
+	23.10.2013	US$	90,00	65,21	H	1310	579941 OPP_TransAmount=-90,00");
+			var processingDonations = new ProcessingOtherTransfers(3224, reader);
+			var donation = processingDonations.NextDonation;
+			Assert.That(donation.Donor, Is.EqualTo("Mustermann, Markus"));
+		}
 	}
 }
 
