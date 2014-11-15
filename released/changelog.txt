@@ -1,3 +1,12 @@
+2014-11-15 version 1.4.9.1
+* Fix problem when account line has 5 instead of 4 parts (as seen in October statement)
+
+2014-09-13 version 1.4.9
+* Improve handling of files that got saved in Word. NOTE: if a file got saved in Word
+  the address doesn't get converted correctly. The reason is that Word reformats the file,
+  introducing additional tabstops. This makes it impossible to reliably parse the file. It is
+  therefore recommended to save the file directly from the email.
+
 2013-11-20 version 1.4.8
 * Fix/improve multiline handling
 
