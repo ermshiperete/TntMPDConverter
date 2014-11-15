@@ -1,28 +1,26 @@
 // Copyright (c) 2013, Eberhard Beilharz
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 using System;
+using System.Globalization;
 
 namespace TntMPDConverter
 {
 	public class Account : State
 	{
-		private int m_AccountNo;
+		protected int m_AccountNo;
 
-		public Account(Scanner reader) : base(reader)
+		public Account(Scanner reader)
+			: base(reader)
 		{
 			IsValid = true;
 		}
 
-		public static bool IsAccount(string line)
+		private static bool IsNumber(string numberString)
 		{
-			string[] textArray1 = line.Split(new[] { '\t' });
-			if (textArray1.Length != 4)
-			{
-				return false;
-			}
+			var cultureInfo = new CultureInfo("de-DE");
 			try
 			{
-				Convert.ToInt32(textArray1[1]);
+				Convert.ToDecimal(numberString, cultureInfo);
 			}
 			catch (FormatException)
 			{
@@ -31,50 +29,57 @@ namespace TntMPDConverter
 			return true;
 		}
 
+		public static bool IsAccount(string line)
+		{
+			// the account line has 4 or 5 parts:
+			// 3215	Sonstige Einnahmen (steuerneutral)	0,00	50,00
+			// or
+			// 3215	Sonstige Einnahmen (steuerneutral)	50,00
+			string[] textArray = line.Split(new[] { '\t' });
+			if (textArray.Length < 4 || textArray.Length > 5 ||
+				(textArray.Length == 5 && !IsNumber(textArray[3])) ||
+				!IsNumber(textArray[textArray.Length - 1]))
+			{
+				return false;
+			}
+
+			return IsNumber(textArray[1]);
+		}
+
 		public override State NextState()
 		{
 			ProcessAccountNo();
-			if (m_AccountNo == 7100 || m_AccountNo == 7800 ||
-				// new account numbers starting 1/2011
-				m_AccountNo == 1191 || m_AccountNo == 1197 || m_AccountNo == 1185 ||
-				// new account numbers starting 12/2011
-				m_AccountNo == 3220 || m_AccountNo == 3231 || m_AccountNo == 3239 ||
-				// 3241 - Transfers from other organizations
-				m_AccountNo == 3241)
+			switch (m_AccountNo)
 			{
-				return new ProcessingDonations(Reader);
+				case 7100:
+				case 7800:
+				case 1191: // new account numbers starting 1/2011
+				case 1197:
+				case 1185:
+				case 3220: // new account numbers starting 12/2011
+				case 3231:
+				case 3239:
+				case 3241: // 3241 - Transfers from other organizations
+					return new ProcessingDonations(Reader);
+				case 8900:
+				case 3215: // new account numbers starting 1/2011
+					return new ProcessingOtherProceeds(Reader);
+				case 715: // Member transfer
+					return new ProcessingMemberTransfers(m_AccountNo, Reader);
+				case 3224: // 3224 - Transfers from other WOs
+					return new ProcessingOtherTransfers(m_AccountNo, Reader);
+				default:
+					return new IgnoreAccount(Reader);
 			}
-			if (m_AccountNo == 8900 ||
-				// new account numbers starting 1/2011
-				m_AccountNo == 3215)
-			{
-				return new ProcessingOtherProceeds(Reader);
-			}
-			// Member transfer
-			if (m_AccountNo == 715)
-			{
-				return new ProcessingMemberTransfers(m_AccountNo, Reader);
-			}
-			// 3224 - Transfers from other WOs
-			if (m_AccountNo == 3224)
-			{
-				return new ProcessingOtherTransfers(m_AccountNo, Reader);
-			}
-			return new IgnoreAccount(Reader);
 		}
 
 		protected void ProcessAccountNo()
 		{
-			string text1 = Reader.ReadLine();
-			string[] textArray1 = text1.Split(new[] { '\t' });
-			if (textArray1.Length != 4)
-			{
+			string line = Reader.ReadLine();
+			if (!IsAccount(line))
 				throw new ApplicationException();
-			}
-			text1 = Reader.ReadLine();
-			Reader.UnreadLine(text1);
-			IsValid = IsAccount(text1);
-			m_AccountNo = Convert.ToInt32(textArray1[1]);
+			string[] textArray = line.Split(new[] { '\t' });
+			m_AccountNo = Convert.ToInt32(textArray[1]);
 		}
 	}
 }

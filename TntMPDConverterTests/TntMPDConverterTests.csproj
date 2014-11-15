@@ -76,6 +76,7 @@
     <Compile Include="RtfConverterTests.cs" />
     <Compile Include="ProcessingOtherProceedsTests.cs" />
     <Compile Include="RtfProcessLineTests.cs" />
+    <Compile Include="AccountTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
