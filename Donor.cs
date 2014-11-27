@@ -58,6 +58,8 @@ namespace TntMPDConverter
 			Email = email;
 			DonationsCount = donationsCount;
 			Amount = amount;
+
+			MergeNameAndContactPersonIfNecessary(name, contactPerson);
 		}
 
 		public uint DonorNo { get; private set; }
@@ -82,6 +84,43 @@ namespace TntMPDConverter
 					bldr.Append(SplitPhone(phone));
 				}
 				return bldr.ToString();
+			}
+		}
+
+		private void MergeNameAndContactPersonIfNecessary(string name, string contactPerson)
+		{
+			if (string.IsNullOrEmpty(contactPerson))
+				return;
+
+			foreach (var separator in Separators)
+			{
+				var separatorEndTrim = separator.TrimEnd();
+				var separatorStartTrim = separator.TrimStart();
+
+				if (name.Contains(separator) && name.IndexOf(separator) + separator.Length >= name.Length)
+				{
+					Name = name + contactPerson;
+					ContactPerson = string.Empty;
+					return;
+				}
+				if (name.Contains(separatorEndTrim) && name.IndexOf(separatorEndTrim) + separatorEndTrim.Length >= name.Length)
+				{
+					Name = name + " " + contactPerson;
+					ContactPerson = string.Empty;
+					return;
+				}
+				if (contactPerson.Contains(separator) && contactPerson.IndexOf(separator) == 0)
+				{
+					Name = name + contactPerson;
+					ContactPerson = string.Empty;
+					return;
+				}
+				if (contactPerson.Contains(separatorStartTrim) && contactPerson.IndexOf(separatorStartTrim) == 0)
+				{
+					Name = name + " " + contactPerson;
+					ContactPerson = string.Empty;
+					return;
+				}
 			}
 		}
 

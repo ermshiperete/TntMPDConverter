@@ -32,8 +32,8 @@ namespace TntMPDConverter
 		[Test]
 		public void Title()
 		{
-			var donor = new Donor(1, "Mustermann, Dr. Markus", string.Empty, string.Empty, string.Empty, string.Empty,
-					null, string.Empty, 0, 0);
+			var donor = new Donor(1, "Mustermann, Dr. Markus",
+				string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
 			Assert.AreEqual("Mustermann", donor.LastName);
 			Assert.AreEqual("Markus", donor.FirstName);
 			Assert.AreEqual("P", donor.PersonType);
@@ -43,8 +43,8 @@ namespace TntMPDConverter
 		[Test]
 		public void Spouse()
 		{
-			var donor = new Donor(1, "Mustermann, Markus und Martina", string.Empty, string.Empty, string.Empty, string.Empty,
-					null, string.Empty, 0, 0);
+			var donor = new Donor(1, "Mustermann, Markus und Martina",
+				string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
 			Assert.AreEqual("Mustermann", donor.LastName);
 			Assert.AreEqual("Markus", donor.FirstName);
 			Assert.AreEqual("", donor.SpouseLastName);
@@ -54,10 +54,66 @@ namespace TntMPDConverter
 		}
 
 		[Test]
+		public void SpouseInContactPerson()
+		{
+			var donor = new Donor(1, "Mustermann, Markus und ", "Martina",
+				string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
+			Assert.AreEqual("Mustermann", donor.LastName);
+			Assert.AreEqual("Markus", donor.FirstName);
+			Assert.AreEqual("", donor.SpouseLastName);
+			Assert.AreEqual("Martina", donor.SpouseFirstName);
+			Assert.AreEqual("P", donor.PersonType);
+			Assert.AreEqual("", donor.Title);
+			Assert.AreEqual("", donor.ContactPerson);
+		}
+
+		[Test]
+		public void SpouseInContactPerson_NoTrailingSpace()
+		{
+			var donor = new Donor(1, "Mustermann, Markus und", "Martina",
+				string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
+			Assert.AreEqual("Mustermann", donor.LastName);
+			Assert.AreEqual("Markus", donor.FirstName);
+			Assert.AreEqual("", donor.SpouseLastName);
+			Assert.AreEqual("Martina", donor.SpouseFirstName);
+			Assert.AreEqual("P", donor.PersonType);
+			Assert.AreEqual("", donor.Title);
+			Assert.AreEqual("", donor.ContactPerson);
+		}
+
+		[Test]
+		public void SpouseAndSeparatorInContactPerson()
+		{
+			var donor = new Donor(1, "Mustermann, Markus", " und Martina",
+				string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
+			Assert.AreEqual("Mustermann", donor.LastName);
+			Assert.AreEqual("Markus", donor.FirstName);
+			Assert.AreEqual("", donor.SpouseLastName);
+			Assert.AreEqual("Martina", donor.SpouseFirstName);
+			Assert.AreEqual("P", donor.PersonType);
+			Assert.AreEqual("", donor.Title);
+			Assert.AreEqual("", donor.ContactPerson);
+		}
+
+		[Test]
+		public void SpouseAndSeparatorInContactPerson_NoLeadingSpace()
+		{
+			var donor = new Donor(1, "Mustermann, Markus", "und Martina",
+				string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
+			Assert.AreEqual("Mustermann", donor.LastName);
+			Assert.AreEqual("Markus", donor.FirstName);
+			Assert.AreEqual("", donor.SpouseLastName);
+			Assert.AreEqual("Martina", donor.SpouseFirstName);
+			Assert.AreEqual("P", donor.PersonType);
+			Assert.AreEqual("", donor.Title);
+			Assert.AreEqual("", donor.ContactPerson);
+		}
+
+		[Test]
 		public void SpouseAndTitle()
 		{
-			var donor = new Donor(1, "Mustermann, Prof. Dr. Dr. h.c. Markus & Pfarrerin Martina", string.Empty, string.Empty, string.Empty, string.Empty,
-					null, string.Empty, 0, 0);
+			var donor = new Donor(1, "Mustermann, Prof. Dr. Dr. h.c. Markus & Pfarrerin Martina",
+				string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
 			Assert.AreEqual("Mustermann", donor.LastName);
 			Assert.AreEqual("Markus", donor.FirstName);
 			Assert.AreEqual("Prof. Dr. Dr. h.c.", donor.Title);
@@ -70,8 +126,8 @@ namespace TntMPDConverter
 		[Test]
 		public void Spouse_UDot()
 		{
-			var donor = new Donor(1, "Mustermann, Markus u. Martina", string.Empty, string.Empty, string.Empty, string.Empty,
-					null, string.Empty, 0, 0);
+			var donor = new Donor(1, "Mustermann, Markus u. Martina",
+				string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
 			Assert.AreEqual("Mustermann", donor.LastName);
 			Assert.AreEqual("Markus", donor.FirstName);
 			Assert.AreEqual("", donor.SpouseLastName);
@@ -83,8 +139,8 @@ namespace TntMPDConverter
 		[Test]
 		public void Spouse_Title()
 		{
-			var donor = new Donor(1, "Mustermann, Markus und Dr. Martina", string.Empty, string.Empty, string.Empty, string.Empty,
-					null, string.Empty, 0, 0);
+			var donor = new Donor(1, "Mustermann, Markus und Dr. Martina",
+				string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
 			Assert.AreEqual("Mustermann", donor.LastName);
 			Assert.AreEqual("Markus", donor.FirstName);
 			Assert.AreEqual("", donor.SpouseLastName);
@@ -97,8 +153,8 @@ namespace TntMPDConverter
 		[Test]
 		public void Spouse_DifferentLastName()
 		{
-			var donor = new Donor(1, "Mustermann, Markus und Musterfrau, Martina", string.Empty, string.Empty, string.Empty, string.Empty,
-					null, string.Empty, 0, 0);
+			var donor = new Donor(1, "Mustermann, Markus und Musterfrau, Martina",
+				string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
 			Assert.AreEqual("Mustermann", donor.LastName);
 			Assert.AreEqual("Markus", donor.FirstName);
 			Assert.AreEqual("Musterfrau", donor.SpouseLastName);
@@ -109,10 +165,25 @@ namespace TntMPDConverter
 		}
 
 		[Test]
+		public void Spouse_DifferentLastNameInContactPerson()
+		{
+			var donor = new Donor(1, "Mustermann, Markus und ", "Musterfrau, Martina",
+				string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
+			Assert.AreEqual("Mustermann", donor.LastName);
+			Assert.AreEqual("Markus", donor.FirstName);
+			Assert.AreEqual("Musterfrau", donor.SpouseLastName);
+			Assert.AreEqual("Martina", donor.SpouseFirstName);
+			Assert.AreEqual("P", donor.PersonType);
+			Assert.AreEqual("", donor.Title);
+			Assert.AreEqual("", donor.SpouseTitle);
+			Assert.AreEqual("", donor.ContactPerson);
+		}
+
+		[Test]
 		public void Spouse_DifferentLastNameTitle()
 		{
-			var donor = new Donor(1, "Mustermann, Markus und Musterfrau, Dr. Martina", string.Empty, string.Empty, string.Empty, string.Empty,
-					null, string.Empty, 0, 0);
+			var donor = new Donor(1, "Mustermann, Markus und Musterfrau, Dr. Martina",
+				string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
 			Assert.AreEqual("Mustermann", donor.LastName);
 			Assert.AreEqual("Markus", donor.FirstName);
 			Assert.AreEqual("Musterfrau", donor.SpouseLastName);
@@ -120,6 +191,22 @@ namespace TntMPDConverter
 			Assert.AreEqual("P", donor.PersonType);
 			Assert.AreEqual("", donor.Title);
 			Assert.AreEqual("Dr.", donor.SpouseTitle);
+			Assert.AreEqual("", donor.ContactPerson);
+		}
+
+		[Test]
+		public void Spouse_DifferentLastNameTitleInContactPerson()
+		{
+			var donor = new Donor(1, "Mustermann, Markus und ", "Musterfrau, Dr. Martina",
+				string.Empty, string.Empty, string.Empty, null, string.Empty, 0, 0);
+			Assert.AreEqual("Mustermann", donor.LastName);
+			Assert.AreEqual("Markus", donor.FirstName);
+			Assert.AreEqual("Musterfrau", donor.SpouseLastName);
+			Assert.AreEqual("Martina", donor.SpouseFirstName);
+			Assert.AreEqual("P", donor.PersonType);
+			Assert.AreEqual("", donor.Title);
+			Assert.AreEqual("Dr.", donor.SpouseTitle);
+			Assert.AreEqual("", donor.ContactPerson);
 		}
 
 		[Test]

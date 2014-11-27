@@ -1,3 +1,6 @@
+2014-11-27 version 1.4.9.2
+* Improve handling of donor names split accross two lines
+
 2014-11-15 version 1.4.9.1
 * Fix problem when account line has 5 instead of 4 parts (as seen in October statement)
 
